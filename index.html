@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HondenvoerDeal.nl – Beste hondenvoer aanbiedingen</title>
+  <meta name="description" content="Vergelijk de beste hondenvoer aanbiedingen van 10 grote dierenwinkels. Filter op merk, soort en winkel. Altijd de scherpste kortingen." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --groen: #2d5a27; --groen-mid: #4a7c3f; --groen-licht: #7ab369;
+      --groen-pale: #e8f5e3; --groen-ultra: #f3faf0;
+      --aarde: #8b5e3c; --korting: #c0392b; --korting-bg: #fdf0ef;
+      --wit: #ffffff; --tekst: #1a2e17; --grijs: #6b7c6a; --rand: #d4e8ce;
+      --schaduw: 0 4px 24px rgba(45,90,39,.10);
+      --schaduw-hover: 0 12px 40px rgba(45,90,39,.18);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',sans-serif;background:var(--groen-ultra);color:var(--tekst);min-height:100vh}
+
+    /* HEADER */
+    header{background:var(--groen);background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%234a7c3f' fill-opacity='0.3'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");padding:0 20px;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.2)}
+    .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .logo-paw{font-size:26px;animation:wag 2s ease-in-out infinite;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2))}
+    @keyframes wag{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+    .logo-text{display:flex;align-items:baseline;gap:0;line-height:1}
+    .logo-hondenvoer{font-family:'DM Sans',sans-serif;font-size:19px;font-weight:800;color:var(--wit);letter-spacing:-0.5px}
+    .logo-deal{font-family:'DM Sans',sans-serif;font-size:19px;font-weight:900;color:var(--groen-licht);letter-spacing:-0.5px}
+    .logo-nl{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.55);align-self:flex-end;margin-bottom:1px;margin-left:1px}
+    .logo-dot{color:var(--groen-licht);font-weight:900}
+    .header-badge{background:var(--groen-licht);color:var(--wit);font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;letter-spacing:.5px}
+
+    /* HERO */
+    .hero{background:linear-gradient(135deg,var(--groen) 0%,var(--groen-mid) 100%);padding:48px 20px 70px;text-align:center;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;bottom:-30px;left:0;right:0;height:60px;background:var(--groen-ultra);clip-path:ellipse(60% 100% at 50% 100%)}
+    .hero-dogs{display:flex;justify-content:center;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .dog-bubble{background:rgba(255,255,255,.12);border-radius:50%;width:80px;height:80px;display:flex;align-items:center;justify-content:center;font-size:44px;backdrop-filter:blur(4px);border:2px solid rgba(255,255,255,.2);transition:transform .3s;animation:bobble 3s ease-in-out infinite}
+    .dog-bubble:nth-child(2){animation-delay:.4s;width:96px;height:96px;font-size:54px}
+    .dog-bubble:nth-child(3){animation-delay:.8s}
+    @keyframes bobble{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+    .hero h1{font-family:'DM Sans',sans-serif;font-size:clamp(26px,5vw,48px);font-weight:900;color:var(--wit);line-height:1.1;margin-bottom:12px;letter-spacing:-1px}
+    .hero h1 em{color:var(--groen-licht);font-style:normal}
+    .hero p{color:rgba(255,255,255,.82);font-size:16px;font-weight:400;max-width:480px;margin:0 auto 28px;line-height:1.6}
+    .stats{display:flex;justify-content:center;gap:32px;flex-wrap:wrap}
+    .stat{color:var(--wit);text-align:center}
+    .stat-num{font-family:'DM Sans',sans-serif;font-size:26px;font-weight:800;color:var(--groen-licht);display:block;letter-spacing:-0.5px}
+    .stat-label{font-size:12px;opacity:.75;letter-spacing:.5px}
+
+    /* FILTER PANEEL */
+    .filter-paneel{max-width:1100px;margin:44px auto 0;padding:0 20px}
+    .filter-sectie{margin-bottom:18px}
+    .filter-label{font-size:11px;font-weight:700;color:var(--grijs);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+    .filter-label::after{content:'';flex:1;height:1px;background:var(--rand)}
+    .filter-rij{display:flex;gap:7px;flex-wrap:wrap}
+    .fbtn{background:var(--wit);border:2px solid var(--rand);color:var(--groen);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;padding:7px 16px;border-radius:24px;cursor:pointer;transition:all .2s;white-space:nowrap}
+    .fbtn:hover{border-color:var(--groen-mid);background:var(--groen-pale)}
+    .fbtn.active{background:var(--groen);border-color:var(--groen);color:var(--wit)}
+    .fbtn[data-merk="royal-canin"].active{background:#c0392b;border-color:#c0392b}
+    .fbtn[data-merk="hills"].active{background:#e67e22;border-color:#e67e22}
+    .fbtn[data-merk="purina"].active{background:#2980b9;border-color:#2980b9}
+    .fbtn[data-merk="purina-beneful"].active{background:#16a085;border-color:#16a085}
+    .fbtn[data-merk="eukanuba"].active{background:#8e44ad;border-color:#8e44ad}
+    .fbtn[data-merk="pedigree"].active{background:#d35400;border-color:#d35400}
+    .fbtn[data-merk="josera"].active{background:#27ae60;border-color:#27ae60}
+    .fbtn[data-merk="frolic"].active{background:#e91e8c;border-color:#e91e8c}
+    .fbtn[data-merk="edgard-cooper"].active{background:#2c7873;border-color:#2c7873}
+    .fbtn[data-merk="iams"].active{background:#1565c0;border-color:#1565c0}
+    .fbtn[data-merk="bonzo"].active{background:#6d4c41;border-color:#6d4c41}
+    .fbtn[data-merk="perfect-fit"].active{background:#ad1457;border-color:#ad1457}
+
+    /* SORT BAR */
+    .sort-bar{max-width:1100px;margin:20px auto 0;padding:0 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+    .deals-count{font-size:14px;color:var(--grijs)}
+    .deals-count strong{color:var(--tekst)}
+    .sort-select{font-family:'DM Sans',sans-serif;font-size:13px;border:2px solid var(--rand);background:var(--wit);color:var(--tekst);padding:7px 14px;border-radius:8px;cursor:pointer}
+    .reset-btn{background:none;border:none;color:var(--grijs);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;text-decoration:underline;padding:0}
+    .reset-btn:hover{color:var(--korting)}
+
+    /* GRID */
+    .deals-wrap{max-width:1100px;margin:24px auto 60px;padding:0 20px}
+    .deals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:20px}
+
+    /* CARD */
+    .deal-card{background:var(--wit);border-radius:16px;overflow:hidden;box-shadow:var(--schaduw);transition:transform .25s,box-shadow .25s;display:flex;flex-direction:column;position:relative;animation:fadeUp .4s ease both}
+    .deal-card:hover{transform:translateY(-4px);box-shadow:var(--schaduw-hover)}
+    .deal-card.hidden{display:none}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .korting-badge{position:absolute;top:14px;left:14px;background:var(--korting);color:var(--wit);font-size:13px;font-weight:700;padding:5px 11px;border-radius:20px;z-index:2}
+    .winkel-badge{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.92);color:var(--groen);font-size:11px;font-weight:700;padding:4px 10px;border-radius:12px;z-index:2;border:1.5px solid var(--rand)}
+    .soort-tag{background:var(--groen-pale);color:var(--groen-mid);font-size:11px;font-weight:600;text-align:center;padding:5px;letter-spacing:.5px;text-transform:uppercase}
+    .card-img{width:100%;height:160px;object-fit:contain;background:var(--groen-ultra);padding:16px}
+    .card-body{padding:16px 18px 20px;flex:1;display:flex;flex-direction:column}
+    .card-merk{font-size:11px;font-weight:700;color:var(--groen-mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+    .card-naam{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;color:var(--tekst);line-height:1.3;margin-bottom:5px;letter-spacing:-0.2px}
+    .card-gewicht{font-size:12px;color:var(--grijs);margin-bottom:14px}
+    .prijzen{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+    .prijs-nieuw{font-family:'DM Sans',sans-serif;font-size:24px;font-weight:800;color:var(--groen);letter-spacing:-0.5px}
+    .prijs-oud{font-size:15px;color:var(--grijs);text-decoration:line-through}
+    .besparing{font-size:12px;color:var(--korting);font-weight:600;background:var(--korting-bg);padding:3px 8px;border-radius:8px;margin-bottom:16px;display:inline-block}
+    .deal-btn{display:block;width:100%;background:var(--groen);color:var(--wit);text-align:center;text-decoration:none;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;padding:13px;border-radius:10px;transition:background .2s,transform .15s;margin-top:auto;border:none;cursor:pointer}
+    .deal-btn:hover{background:var(--groen-mid);transform:scale(1.02)}
+    .deal-btn::after{content:' →'}
+    .card-footer{padding:10px 18px 14px;border-top:1px solid var(--groen-ultra);display:flex;align-items:center;justify-content:space-between}
+    .geldig-tot{font-size:11px;color:var(--grijs)}
+    .geldig-tot span{color:var(--aarde);font-weight:600}
+    .gratis-verzending{font-size:11px;color:var(--groen-mid);font-weight:600}
+
+    /* GEEN RESULTATEN */
+    .geen-resultaten{text-align:center;padding:60px 20px;display:none}
+    .geen-resultaten.zichtbaar{display:block}
+    .geen-resultaten p{color:var(--grijs);font-size:16px;line-height:2.2}
+
+    /* FOOTER */
+    footer{background:var(--groen);color:rgba(255,255,255,.7);text-align:center;padding:28px 20px;font-size:13px;line-height:1.8}
+
+    @media(max-width:600px){.deals-grid{grid-template-columns:1fr 1fr;gap:12px}.card-naam{font-size:14px}.prijs-nieuw{font-size:20px}}
+    @media(max-width:380px){.deals-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <span class="logo-paw">🐾</span>
+      <span class="logo-text">
+        <span class="logo-hondenvoer">Hondenvoer</span><span class="logo-dot">.</span><span class="logo-deal">Deal</span><span class="logo-nl">.nl</span>
+      </span>
+    </a>
+    <span class="header-badge">Dagelijks bijgewerkt</span>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-dogs">
+    <div class="dog-bubble">🐩</div>
+    <div class="dog-bubble">🐕</div>
+    <div class="dog-bubble">🦮</div>
+  </div>
+  <h1>De beste <em>hondenvoer</em><br>aanbiedingen op één plek</h1>
+  <p>Wij vergelijken dagelijks 10 grote dierenwinkels. Filter op merk, soort of winkel en vind altijd de scherpste prijs.</p>
+  <div class="stats">
+    <div class="stat"><span class="stat-num">10</span><span class="stat-label">Winkels vergeleken</span></div>
+    <div class="stat"><span class="stat-num">Tot 60%</span><span class="stat-label">Korting mogelijk</span></div>
+    <div class="stat"><span class="stat-num" id="totaal">9</span><span class="stat-label">Actieve deals</span></div>
+  </div>
+</section>
+
+<div class="filter-paneel">
+  <div class="filter-sectie">
+    <p class="filter-label">Soort voer</p>
+    <div class="filter-rij" id="filter-soort">
+      <button class="fbtn active" data-soort="alle">Alle soorten</button>
+      <button class="fbtn" data-soort="droogvoer">🥣 Droogvoer</button>
+      <button class="fbtn" data-soort="natvoer">🥫 Natvoer</button>
+      <button class="fbtn" data-soort="snacks">🦴 Snacks</button>
+      <button class="fbtn" data-soort="graanvrij">🌿 Graanvrij</button>
+      <button class="fbtn" data-soort="puppy">🐶 Puppy</button>
+    </div>
+  </div>
+  <div class="filter-sectie">
+    <p class="filter-label">Merk</p>
+    <div class="filter-rij" id="filter-merk">
+      <button class="fbtn active" data-merk="alle">Alle merken</button>
+      <button class="fbtn" data-merk="royal-canin">Royal Canin</button>
+      <button class="fbtn" data-merk="hills">Hill's Science</button>
+      <button class="fbtn" data-merk="purina">Purina Pro Plan</button>
+      <button class="fbtn" data-merk="purina-beneful">Purina Beneful</button>
+      <button class="fbtn" data-merk="eukanuba">Eukanuba</button>
+      <button class="fbtn" data-merk="pedigree">Pedigree</button>
+      <button class="fbtn" data-merk="josera">Josera</button>
+      <button class="fbtn" data-merk="frolic">Frolic</button>
+      <button class="fbtn" data-merk="edgard-cooper">Edgard & Cooper</button>
+      <button class="fbtn" data-merk="iams">Iams</button>
+      <button class="fbtn" data-merk="bonzo">Bonzo</button>
+      <button class="fbtn" data-merk="perfect-fit">Perfect Fit</button>
+    </div>
+  </div>
+  <div class="filter-sectie">
+    <p class="filter-label">Winkel</p>
+    <div class="filter-rij" id="filter-winkel">
+      <button class="fbtn active" data-winkel="alle">Alle winkels</button>
+      <button class="fbtn" data-winkel="zooplus">Zooplus</button>
+      <button class="fbtn" data-winkel="brekz">Brekz</button>
+      <button class="fbtn" data-winkel="medpets">Medpets</button>
+      <button class="fbtn" data-winkel="petsplace">Petsplace</button>
+      <button class="fbtn" data-winkel="bol">Bol.com</button>
+      <button class="fbtn" data-winkel="bitiba">Bitiba</button>
+    </div>
+  </div>
+</div>
+
+<div class="sort-bar">
+  <p class="deals-count"><strong id="aantal">16</strong> aanbiedingen gevonden</p>
+  <div style="display:flex;gap:12px;align-items:center">
+    <button class="reset-btn" id="resetBtn">Filters wissen</button>
+    <select class="sort-select" id="sortering">
+      <option value="korting">Hoogste korting eerst</option>
+      <option value="prijs-laag">Prijs: laag → hoog</option>
+      <option value="prijs-hoog">Prijs: hoog → laag</option>
+    </select>
+  </div>
+</div>
+
+<div class="deals-wrap">
+
+  <!-- Demo banner — verdwijnt zodra echte feeds actief zijn -->
+  <div id="demo-banner" style="display:none;background:#fff8e1;border:2px solid #f9a825;border-radius:12px;padding:14px 20px;margin-bottom:20px;font-size:13px;color:#5a4000;line-height:1.6">
+    <strong>⚙️ Demo modus</strong> — Geen feed URLs ingesteld. Voeg je Awin feed URLs toe als Netlify Environment Variables om echte aanbiedingen te tonen.
+  </div>
+
+  <div class="deals-grid" id="grid"></div>
+
+  <div class="geen-resultaten" id="geenResultaten">
+    <p>🐶 Geen aanbiedingen gevonden voor deze combinatie.<br>
+    <button class="reset-btn" onclick="resetFilters()" style="font-size:15px;margin-top:8px">Wis alle filters</button></p>
+  </div>
+</div>
+
+<footer>
+  <p><strong style="color:#fff">HondenvoerDeal.nl</strong> — Dagelijks de beste hondenvoer aanbiedingen</p>
+  <p>Wij vergelijken Zooplus · Brekz · Medpets · Petsplace · Bol.com · Bitiba en meer</p>
+  <p style="margin-top:10px;font-size:11px">Deze site bevat affiliate links. Bij aankoop ontvangen wij een kleine commissie — zonder extra kosten voor jou.</p>
+</footer>
+
+<script>
+  // ── STATE ──
+  let alleDeals = [];
+  let actief = { soort:'alle', merk:'alle', winkel:'alle' };
+  const grid       = document.getElementById('grid');
+  const aantalEl   = document.getElementById('aantal');
+  const totaalEl   = document.getElementById('totaal');
+  const geenRes    = document.getElementById('geenResultaten');
+  const sortering  = document.getElementById('sortering');
+
+  // ── DEALS LADEN VIA NETLIFY FUNCTION ──
+  async function laadDeals() {
+    grid.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--grijs)">
+        <div style="font-size:40px;margin-bottom:12px">🐾</div>
+        <p style="font-size:16px">Aanbiedingen laden...</p>
+      </div>`;
+
+    try {
+      const res  = await fetch('/.netlify/functions/deals');
+      const data = await res.json();
+
+      alleDeals = data.deals || [];
+
+      if (data.isDemo) {
+        document.getElementById('demo-banner').style.display = 'block';
+      }
+
+      if (totaalEl) totaalEl.textContent = alleDeals.length;
+      renderDeals();
+
+    } catch (err) {
+      grid.innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--grijs)">
+          <p>❌ Kon aanbiedingen niet laden. Probeer het later opnieuw.</p>
+        </div>`;
+    }
+  }
+
+  // ── RENDER ──
+  function renderDeals() {
+    // Filteren
+    let zichtbaar = alleDeals.filter(d =>
+      (actief.soort  === 'alle' || d.soort  === actief.soort)  &&
+      (actief.merk   === 'alle' || d.merk   === actief.merk)   &&
+      (actief.winkel === 'alle' || d.winkel === actief.winkel)
+    );
+
+    // Sorteren
+    zichtbaar.sort((a, b) => {
+      if (sortering.value === 'korting')    return b.korting - a.korting;
+      if (sortering.value === 'prijs-laag') return a.prijs - b.prijs;
+      return b.prijs - a.prijs;
+    });
+
+    aantalEl.textContent = zichtbaar.length;
+    geenRes.classList.toggle('zichtbaar', zichtbaar.length === 0);
+
+    if (zichtbaar.length === 0) { grid.innerHTML = ''; return; }
+
+    const soortEmoji = { droogvoer:'🥣', natvoer:'🥫', snacks:'🦴', graanvrij:'🌿', puppy:'🐶' };
+    const placeholder = 'https://placehold.co/300x160/e8f5e3/2d5a27?text=';
+
+    grid.innerHTML = zichtbaar.map((d, i) => `
+      <div class="deal-card" style="animation-delay:${i * 0.05}s">
+        <span class="korting-badge">-${d.korting}%</span>
+        <span class="winkel-badge">${d.winkelnaam}</span>
+        <img class="card-img"
+          src="${d.afbeelding || placeholder + encodeURIComponent(d.merkNaam || d.naam)}"
+          alt="${d.naam}"
+          onerror="this.src='${placeholder + encodeURIComponent(d.naam)}'"
+        />
+        <div class="soort-tag">${soortEmoji[d.soort] || '🥣'} ${d.soort.charAt(0).toUpperCase() + d.soort.slice(1)}</div>
+        <div class="card-body">
+          <p class="card-merk">${d.merkNaam || d.merk}</p>
+          <p class="card-naam">${d.naam}</p>
+          <div class="prijzen">
+            <span class="prijs-nieuw">€${Number(d.prijs).toFixed(2).replace('.',',')}</span>
+            ${d.prijsOud ? `<span class="prijs-oud">€${Number(d.prijsOud).toFixed(2).replace('.',',')}</span>` : ''}
+          </div>
+          ${d.besparing ? `<p class="besparing">Je bespaart €${Number(d.besparing).toFixed(2).replace('.',',')}</p>` : ''}
+          <a class="deal-btn" href="${d.url}" target="_blank" rel="noopener sponsored">Bekijk aanbieding</a>
+        </div>
+        <div class="card-footer">
+          <span class="geldig-tot">Via <span>${d.winkelnaam}</span></span>
+          ${d.gratis_verzending ? '<span class="gratis-verzending">✓ Gratis verzending</span>' : ''}
+        </div>
+      </div>`
+    ).join('');
+  }
+
+  // ── FILTERS ──
+  function bindFilter(groepId, sleutel) {
+    document.getElementById(groepId).querySelectorAll('.fbtn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById(groepId).querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        actief[sleutel] = btn.dataset[sleutel];
+        renderDeals();
+      });
+    });
+  }
+  bindFilter('filter-soort','soort');
+  bindFilter('filter-merk','merk');
+  bindFilter('filter-winkel','winkel');
+  sortering.addEventListener('change', renderDeals);
+  document.getElementById('resetBtn').addEventListener('click', resetFilters);
+
+  function resetFilters() {
+    actief = { soort:'alle', merk:'alle', winkel:'alle' };
+    ['filter-soort','filter-merk','filter-winkel'].forEach(id => {
+      document.getElementById(id).querySelectorAll('.fbtn').forEach((b,i) => b.classList.toggle('active', i===0));
+    });
+    renderDeals();
+  }
+
+  // ── START ──
+  laadDeals();
+</script>
+</body>
+</html>
