@@ -149,17 +149,36 @@
 </section>
 
 <div class="filter-paneel">
+
   <div class="filter-sectie">
-    <p class="filter-label">Soort voer</p>
-    <div class="filter-rij" id="filter-soort">
-      <button class="fbtn active" data-soort="alle">Alle soorten</button>
-      <button class="fbtn" data-soort="droogvoer">🥣 Droogvoer</button>
-      <button class="fbtn" data-soort="natvoer">🥫 Natvoer</button>
-      <button class="fbtn" data-soort="snacks">🦴 Snacks</button>
-      <button class="fbtn" data-soort="graanvrij">🌿 Graanvrij</button>
-      <button class="fbtn" data-soort="puppy">🐶 Puppy</button>
+    <p class="filter-label">Textuur</p>
+    <div class="filter-rij" id="filter-textuur">
+      <button class="fbtn active" data-textuur="alle">Alle</button>
+      <button class="fbtn" data-textuur="droogvoer">🥣 Droogvoer</button>
+      <button class="fbtn" data-textuur="natvoer">🥫 Natvoer</button>
+      <button class="fbtn" data-textuur="snacks">🦴 Snacks</button>
     </div>
   </div>
+
+  <div class="filter-sectie">
+    <p class="filter-label">Levensfase</p>
+    <div class="filter-rij" id="filter-fase">
+      <button class="fbtn active" data-fase="alle">Alle leeftijden</button>
+      <button class="fbtn" data-fase="puppy">🐶 Puppy</button>
+      <button class="fbtn" data-fase="adult">🐕 Adult</button>
+      <button class="fbtn" data-fase="senior">🦴 Senior</button>
+    </div>
+  </div>
+
+  <div class="filter-sectie">
+    <p class="filter-label">Bijzonder</p>
+    <div class="filter-rij" id="filter-bijzonder">
+      <button class="fbtn active" data-bijzonder="alle">Alle</button>
+      <button class="fbtn" data-bijzonder="graanvrij">🌿 Graanvrij</button>
+      <button class="fbtn" data-bijzonder="biologisch">🌱 Biologisch</button>
+    </div>
+  </div>
+
   <div class="filter-sectie">
     <p class="filter-label">Merk</p>
     <div class="filter-rij" id="filter-merk">
@@ -178,6 +197,7 @@
       <button class="fbtn" data-merk="perfect-fit">Perfect Fit</button>
     </div>
   </div>
+
   <div class="filter-sectie">
     <p class="filter-label">Winkel</p>
     <div class="filter-rij" id="filter-winkel">
@@ -188,8 +208,10 @@
       <button class="fbtn" data-winkel="petsplace">Petsplace</button>
       <button class="fbtn" data-winkel="bol">Bol.com</button>
       <button class="fbtn" data-winkel="bitiba">Bitiba</button>
+      <button class="fbtn" data-winkel="joybuy">Joybuy</button>
     </div>
   </div>
+
 </div>
 
 <div class="sort-bar">
@@ -228,7 +250,7 @@
 <script>
   // ── STATE ──
   let alleDeals = [];
-  let actief = { soort:'alle', merk:'alle', winkel:'alle' };
+  let actief = { textuur:'alle', fase:'alle', bijzonder:'alle', merk:'alle', winkel:'alle' };
   const grid       = document.getElementById('grid');
   const aantalEl   = document.getElementById('aantal');
   const totaalEl   = document.getElementById('totaal');
@@ -266,11 +288,12 @@
 
   // ── RENDER ──
   function renderDeals() {
-    // Filteren
     let zichtbaar = alleDeals.filter(d =>
-      (actief.soort  === 'alle' || d.soort  === actief.soort)  &&
-      (actief.merk   === 'alle' || d.merk   === actief.merk)   &&
-      (actief.winkel === 'alle' || d.winkel === actief.winkel)
+      (actief.textuur   === 'alle' || d.textuur   === actief.textuur)   &&
+      (actief.fase      === 'alle' || d.fase      === actief.fase)      &&
+      (actief.bijzonder === 'alle' || d[actief.bijzonder] === true)     &&
+      (actief.merk      === 'alle' || d.merk      === actief.merk)      &&
+      (actief.winkel    === 'alle' || d.winkel    === actief.winkel)
     );
 
     // Sorteren
@@ -285,7 +308,8 @@
 
     if (zichtbaar.length === 0) { grid.innerHTML = ''; return; }
 
-    const soortEmoji = { droogvoer:'🥣', natvoer:'🥫', snacks:'🦴', graanvrij:'🌿', puppy:'🐶' };
+    const soortEmoji = { droogvoer:'🥣', natvoer:'🥫', snacks:'🦴' };
+    const faseLabel  = { puppy:'🐶 Puppy', adult:'🐕 Adult', senior:'🦴 Senior' };
     const placeholder = 'https://placehold.co/300x160/e8f5e3/2d5a27?text=';
 
     grid.innerHTML = zichtbaar.map((d, i) => `
@@ -297,7 +321,12 @@
           alt="${d.naam}"
           onerror="this.src='${placeholder + encodeURIComponent(d.naam)}'"
         />
-        <div class="soort-tag">${soortEmoji[d.soort] || '🥣'} ${d.soort.charAt(0).toUpperCase() + d.soort.slice(1)}</div>
+        <div class="soort-tag">
+          ${soortEmoji[d.textuur] || '🥣'} ${d.textuur ? d.textuur.charAt(0).toUpperCase() + d.textuur.slice(1) : ''}
+          ${d.fase && d.fase !== 'adult' ? ' · ' + faseLabel[d.fase] : ''}
+          ${d.graanvrij ? ' · 🌿' : ''}
+          ${d.biologisch ? ' · 🌱 Bio' : ''}
+        </div>
         <div class="card-body">
           <p class="card-merk">${d.merkNaam || d.merk}</p>
           <p class="card-naam">${d.naam}</p>
@@ -327,15 +356,17 @@
       });
     });
   }
-  bindFilter('filter-soort','soort');
+  bindFilter('filter-textuur','textuur');
+  bindFilter('filter-fase','fase');
+  bindFilter('filter-bijzonder','bijzonder');
   bindFilter('filter-merk','merk');
   bindFilter('filter-winkel','winkel');
   sortering.addEventListener('change', renderDeals);
   document.getElementById('resetBtn').addEventListener('click', resetFilters);
 
   function resetFilters() {
-    actief = { soort:'alle', merk:'alle', winkel:'alle' };
-    ['filter-soort','filter-merk','filter-winkel'].forEach(id => {
+    actief = { textuur:'alle', fase:'alle', bijzonder:'alle', merk:'alle', winkel:'alle' };
+    ['filter-textuur','filter-fase','filter-bijzonder','filter-merk','filter-winkel'].forEach(id => {
       document.getElementById(id).querySelectorAll('.fbtn').forEach((b,i) => b.classList.toggle('active', i===0));
     });
     renderDeals();
