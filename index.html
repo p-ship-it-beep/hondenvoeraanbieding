@@ -89,8 +89,16 @@
     @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
     .korting-badge{position:absolute;top:14px;left:14px;background:var(--korting);color:var(--wit);font-size:13px;font-weight:700;padding:5px 11px;border-radius:20px;z-index:2}
     .winkel-badge{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.92);color:var(--groen);font-size:11px;font-weight:700;padding:4px 10px;border-radius:12px;z-index:2;border:1.5px solid var(--rand)}
+
+    /* Foto sectie */
+    .card-foto{position:relative;background:var(--groen-ultra);height:180px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .card-img{width:100%;height:180px;object-fit:contain;padding:16px;transition:transform .3s}
+    .deal-card:hover .card-img{transform:scale(1.04)}
+    .card-merklogo{position:absolute;bottom:8px;right:8px;height:28px;background:var(--wit);border-radius:8px;padding:3px 7px;border:1px solid var(--rand);display:flex;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+    .card-merklogo img{height:20px;object-fit:contain}
+    .card-merklogo-text{font-size:10px;font-weight:800;color:var(--tekst);letter-spacing:-.2px}
+
     .soort-tag{background:var(--groen-pale);color:var(--groen-mid);font-size:11px;font-weight:600;text-align:center;padding:5px;letter-spacing:.5px;text-transform:uppercase}
-    .card-img{width:100%;height:160px;object-fit:contain;background:var(--groen-ultra);padding:16px}
     .card-body{padding:16px 18px 20px;flex:1;display:flex;flex-direction:column}
     .card-merk{font-size:11px;font-weight:700;color:var(--groen-mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
     .card-naam{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;color:var(--tekst);line-height:1.3;margin-bottom:5px;letter-spacing:-0.2px}
@@ -310,23 +318,51 @@
 
     const soortEmoji = { droogvoer:'🥣', natvoer:'🥫', snacks:'🦴' };
     const faseLabel  = { puppy:'🐶 Puppy', adult:'🐕 Adult', senior:'🦴 Senior' };
-    const placeholder = 'https://placehold.co/300x160/e8f5e3/2d5a27?text=';
+    const placeholder = 'https://placehold.co/400x180/e8f5e3/2d5a27?text=';
 
-    grid.innerHTML = zichtbaar.map((d, i) => `
+    // Merklogo's als gekleurde tekstbadges (werkt altijd, geen externe afbeeldingen)
+    const merkLogos = {
+      'royal-canin':   { bg:'#c0392b', color:'#fff', text:'ROYAL CANIN' },
+      'hills':         { bg:'#e67e22', color:'#fff', text:"HILL'S" },
+      'purina':        { bg:'#2980b9', color:'#fff', text:'PRO PLAN' },
+      'purina-beneful':{ bg:'#16a085', color:'#fff', text:'BENEFUL' },
+      'eukanuba':      { bg:'#8e44ad', color:'#fff', text:'EUKANUBA' },
+      'pedigree':      { bg:'#d35400', color:'#fff', text:'PEDIGREE' },
+      'josera':        { bg:'#27ae60', color:'#fff', text:'JOSERA' },
+      'frolic':        { bg:'#e91e8c', color:'#fff', text:'FROLIC' },
+      'edgard-cooper': { bg:'#2c7873', color:'#fff', text:'EDGARD' },
+      'iams':          { bg:'#1565c0', color:'#fff', text:'IAMS' },
+      'bonzo':         { bg:'#6d4c41', color:'#fff', text:'BONZO' },
+      'perfect-fit':   { bg:'#ad1457', color:'#fff', text:'PERFECT FIT' },
+    };
+
+    grid.innerHTML = zichtbaar.map((d, i) => {
+      const logo = merkLogos[d.merk] || { bg:'var(--groen)', color:'#fff', text: (d.merkNaam||'').toUpperCase() };
+      const fotoSrc = d.afbeelding || `${placeholder}${encodeURIComponent(d.merkNaam || d.naam)}`;
+
+      return `
       <div class="deal-card" style="animation-delay:${i * 0.05}s">
         <span class="korting-badge">-${d.korting}%</span>
         <span class="winkel-badge">${d.winkelnaam}</span>
-        <img class="card-img"
-          src="${d.afbeelding || placeholder + encodeURIComponent(d.merkNaam || d.naam)}"
-          alt="${d.naam}"
-          onerror="this.src='${placeholder + encodeURIComponent(d.naam)}'"
-        />
+
+        <div class="card-foto">
+          <img class="card-img"
+            src="${fotoSrc}"
+            alt="${d.naam}"
+            onerror="this.src='${placeholder}${encodeURIComponent(d.naam)}'"
+          />
+          <div class="card-merklogo">
+            <span class="card-merklogo-text" style="color:${logo.color};background:${logo.bg};padding:3px 7px;border-radius:5px;font-size:9px;font-weight:900;letter-spacing:.5px">${logo.text}</span>
+          </div>
+        </div>
+
         <div class="soort-tag">
           ${soortEmoji[d.textuur] || '🥣'} ${d.textuur ? d.textuur.charAt(0).toUpperCase() + d.textuur.slice(1) : ''}
           ${d.fase && d.fase !== 'adult' ? ' · ' + faseLabel[d.fase] : ''}
           ${d.graanvrij ? ' · 🌿' : ''}
           ${d.biologisch ? ' · 🌱 Bio' : ''}
         </div>
+
         <div class="card-body">
           <p class="card-merk">${d.merkNaam || d.merk}</p>
           <p class="card-naam">${d.naam}</p>
@@ -337,12 +373,13 @@
           ${d.besparing ? `<p class="besparing">Je bespaart €${Number(d.besparing).toFixed(2).replace('.',',')}</p>` : ''}
           <a class="deal-btn" href="${d.url}" target="_blank" rel="noopener sponsored">Bekijk aanbieding</a>
         </div>
+
         <div class="card-footer">
           <span class="geldig-tot">Via <span>${d.winkelnaam}</span></span>
           ${d.gratis_verzending ? '<span class="gratis-verzending">✓ Gratis verzending</span>' : ''}
         </div>
-      </div>`
-    ).join('');
+      </div>`;
+    }).join('');
   }
 
   // ── FILTERS ──
