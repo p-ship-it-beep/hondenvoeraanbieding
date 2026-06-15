@@ -32,6 +32,19 @@ const MERK_MAP = {
   "edgard":"edgard-cooper","edgard & cooper":"edgard-cooper","edgard cooper":"edgard-cooper",
   "iams":"iams","bonzo":"bonzo",
   "perfect fit":"perfect-fit","perfectfit":"perfect-fit",
+  "acana":"acana",
+  "orijen":"orijen",
+  "farmina":"farmina","n&d":"farmina","n & d":"farmina",
+  "ziwi peak":"ziwi","ziwipeak":"ziwi","ziwi":"ziwi",
+  "animonda":"animonda","grancarno":"animonda",
+  "wolfsblut":"wolfsblut","wolf's blut":"wolfsblut","wolfs blut":"wolfsblut",
+  "taste of the wild":"taste-of-the-wild","totw":"taste-of-the-wild",
+  "mjamjam":"mjamjam","mjam mjam":"mjamjam",
+  "inaba":"inaba",
+  "rinti":"rinti",
+  "trainer":"trainer",
+  "happy dog":"happy-dog","happydog":"happy-dog",
+  "terra canis":"terra-canis",
 };
 
 const TEXTUUR_MAP = [
@@ -134,8 +147,9 @@ function bouwDeal(winkel, winkelnaam, i, naam, merkVeld, prijsStr, rrpStr, afbee
 function parseAwinCSV(csv, winkel, winkelnaam, debugInfo, minKorting = 35) {
   const lines = csv.split("\n");
   if (lines.length < 2) return [];
-  const headers = lines[0].split("|").map(h => h.trim().toLowerCase());
-  const col = (row, name) => { const i = headers.indexOf(name); return i >= 0 ? (row[i]||"").trim() : ""; };
+  const stripQ = (v) => (v || "").trim().replace(/^"|"$/g, '');
+  const headers = lines[0].split("|").map(h => stripQ(h).toLowerCase());
+  const col = (row, name) => { const i = headers.indexOf(name); return i >= 0 ? stripQ(row[i]) : ""; };
 
   if (debugInfo) {
     debugInfo.aantalRegels = lines.length - 1;

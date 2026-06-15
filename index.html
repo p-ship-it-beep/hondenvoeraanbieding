@@ -5,6 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HondenvoerDeal.nl – Beste hondenvoer aanbiedingen</title>
   <meta name="description" content="Vergelijk de beste hondenvoer aanbiedingen van grote dierenwinkels. Filter op merk, soort en winkel. Altijd de scherpste kortingen." />
+  <link rel="canonical" href="https://hondenvoerdeal.nl/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://hondenvoerdeal.nl/" />
+  <meta property="og:title"       content="HondenvoerDeal.nl – Beste hondenvoer aanbiedingen" />
+  <meta property="og:description" content="Vergelijk dagelijks de beste hondenvoer aanbiedingen van Zooplus, Brekz, Medpets en meer. Tot 60% korting op Royal Canin, Hills, Purina en andere topmerken." />
+  <meta property="og:image"       content="https://hondenvoerdeal.nl/og-image.png" />
+  <meta property="og:locale"      content="nl_NL" />
+  <meta property="og:site_name"   content="HondenvoerDeal.nl" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="HondenvoerDeal.nl – Beste hondenvoer aanbiedingen" />
+  <meta name="twitter:description" content="Dagelijks de scherpste kortingen op hondenvoer. Filter op merk, soort en winkel." />
+
+  <!-- JSON-LD structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "HondenvoerDeal.nl",
+    "url": "https://hondenvoerdeal.nl/",
+    "description": "Vergelijk de beste hondenvoer aanbiedingen van grote dierenwinkels. Filter op merk, soort en winkel.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://hondenvoerdeal.nl/?zoek={search_term_string}",
+      "query-input": "required name=search_term_string"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "HondenvoerDeal.nl",
+      "url": "https://hondenvoerdeal.nl/"
+    }
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,300&display=swap" rel="stylesheet" />
   <style>
@@ -80,6 +117,14 @@
     .fbtn[data-merk="iams"].active{background:#1565c0;border-color:#1565c0}
     .fbtn[data-merk="bonzo"].active{background:#6d4c41;border-color:#6d4c41}
     .fbtn[data-merk="perfect-fit"].active{background:#ad1457;border-color:#ad1457}
+    .fbtn[data-merk="acana"].active{background:#1b5e20;border-color:#1b5e20}
+    .fbtn[data-merk="orijen"].active{background:#004d40;border-color:#004d40}
+    .fbtn[data-merk="farmina"].active{background:#bf360c;border-color:#bf360c}
+    .fbtn[data-merk="ziwi"].active{background:#0d47a1;border-color:#0d47a1}
+    .fbtn[data-merk="animonda"].active{background:#e65100;border-color:#e65100}
+    .fbtn[data-merk="wolfsblut"].active{background:#880e4f;border-color:#880e4f}
+    .fbtn[data-merk="taste-of-the-wild"].active{background:#33691e;border-color:#33691e}
+    .fbtn[data-merk="happy-dog"].active{background:#f57f17;border-color:#f57f17}
     .fbtn-favoriet{border-color:var(--favoriet);color:var(--favoriet)}
     .fbtn-favoriet.active{background:var(--favoriet);border-color:var(--favoriet);color:var(--wit)}
 
@@ -230,6 +275,14 @@
       <button class="fbtn" data-merk="iams">Iams</button>
       <button class="fbtn" data-merk="bonzo">Bonzo</button>
       <button class="fbtn" data-merk="perfect-fit">Perfect Fit</button>
+      <button class="fbtn" data-merk="acana">Acana</button>
+      <button class="fbtn" data-merk="orijen">Orijen</button>
+      <button class="fbtn" data-merk="farmina">Farmina</button>
+      <button class="fbtn" data-merk="ziwi">Ziwi Peak</button>
+      <button class="fbtn" data-merk="animonda">Animonda</button>
+      <button class="fbtn" data-merk="wolfsblut">Wolfsblut</button>
+      <button class="fbtn" data-merk="taste-of-the-wild">Taste of the Wild</button>
+      <button class="fbtn" data-merk="happy-dog">Happy Dog</button>
     </div>
   </div>
 
@@ -394,18 +447,31 @@
     const placeholder = 'https://placehold.co/400x180/e8f5e3/2d5a27?text=';
 
     const merkLogos = {
-      'royal-canin':   { bg:'#c0392b', color:'#fff', text:'ROYAL CANIN' },
-      'hills':         { bg:'#e67e22', color:'#fff', text:"HILL'S" },
-      'purina':        { bg:'#2980b9', color:'#fff', text:'PRO PLAN' },
-      'purina-beneful':{ bg:'#16a085', color:'#fff', text:'BENEFUL' },
-      'eukanuba':      { bg:'#8e44ad', color:'#fff', text:'EUKANUBA' },
-      'pedigree':      { bg:'#d35400', color:'#fff', text:'PEDIGREE' },
-      'josera':        { bg:'#27ae60', color:'#fff', text:'JOSERA' },
-      'frolic':        { bg:'#e91e8c', color:'#fff', text:'FROLIC' },
-      'edgard-cooper': { bg:'#2c7873', color:'#fff', text:'EDGARD' },
-      'iams':          { bg:'#1565c0', color:'#fff', text:'IAMS' },
-      'bonzo':         { bg:'#6d4c41', color:'#fff', text:'BONZO' },
-      'perfect-fit':   { bg:'#ad1457', color:'#fff', text:'PERFECT FIT' },
+      'royal-canin':      { bg:'#c0392b', color:'#fff', text:'ROYAL CANIN' },
+      'hills':            { bg:'#e67e22', color:'#fff', text:"HILL'S" },
+      'purina':           { bg:'#2980b9', color:'#fff', text:'PRO PLAN' },
+      'purina-beneful':   { bg:'#16a085', color:'#fff', text:'BENEFUL' },
+      'eukanuba':         { bg:'#8e44ad', color:'#fff', text:'EUKANUBA' },
+      'pedigree':         { bg:'#d35400', color:'#fff', text:'PEDIGREE' },
+      'josera':           { bg:'#27ae60', color:'#fff', text:'JOSERA' },
+      'frolic':           { bg:'#e91e8c', color:'#fff', text:'FROLIC' },
+      'edgard-cooper':    { bg:'#2c7873', color:'#fff', text:'EDGARD' },
+      'iams':             { bg:'#1565c0', color:'#fff', text:'IAMS' },
+      'bonzo':            { bg:'#6d4c41', color:'#fff', text:'BONZO' },
+      'perfect-fit':      { bg:'#ad1457', color:'#fff', text:'PERFECT FIT' },
+      'acana':            { bg:'#1b5e20', color:'#fff', text:'ACANA' },
+      'orijen':           { bg:'#004d40', color:'#fff', text:'ORIJEN' },
+      'farmina':          { bg:'#bf360c', color:'#fff', text:'FARMINA' },
+      'ziwi':             { bg:'#0d47a1', color:'#fff', text:'ZIWI PEAK' },
+      'animonda':         { bg:'#e65100', color:'#fff', text:'ANIMONDA' },
+      'wolfsblut':        { bg:'#880e4f', color:'#fff', text:'WOLFSBLUT' },
+      'taste-of-the-wild':{ bg:'#33691e', color:'#fff', text:'TOTW' },
+      'mjamjam':          { bg:'#6a1b9a', color:'#fff', text:'MJAMJAM' },
+      'inaba':            { bg:'#4a148c', color:'#fff', text:'INABA' },
+      'rinti':            { bg:'#37474f', color:'#fff', text:'RINTI' },
+      'trainer':          { bg:'#455a64', color:'#fff', text:'TRAINER' },
+      'happy-dog':        { bg:'#f57f17', color:'#fff', text:'HAPPY DOG' },
+      'terra-canis':      { bg:'#3e2723', color:'#fff', text:'TERRA CANIS' },
     };
 
     grid.innerHTML = zichtbaar.map((d, i) => {
@@ -423,10 +489,10 @@
           onclick="toggleFavoriet('${d.id}', this)">${isFav ? '♥' : '♡'}</button>
 
         <div class="card-foto">
-          <img class="card-img"
+          <img class="card-img" loading="lazy"
             src="${fotoSrc}"
             alt="${d.naam}"
-            onerror="this.src='${placeholder}${encodeURIComponent(d.naam)}'"
+            onerror="this.src='${placeholder}${encodeURIComponent(d.naam.substring(0,60))}'"
           />
           <div class="card-merklogo">
             <span class="card-merklogo-text" style="color:${logo.color};background:${logo.bg};padding:3px 7px;border-radius:5px;font-size:9px;font-weight:900;letter-spacing:.5px">${logo.text}</span>
