@@ -1,0 +1,142 @@
+{
+  "merken": [
+    {
+      "slug": "royal-canin",
+      "naam": "Royal Canin",
+      "producten": [
+        { "naam": "Adult Mini",          "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["2kg","4kg","8kg"] },
+        { "naam": "Adult Medium",        "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["4kg","10kg","15kg"] },
+        { "naam": "Adult Maxi",          "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["10kg","15kg"] },
+        { "naam": "Adult Giant",         "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["15kg"] },
+        { "naam": "Puppy Mini",          "textuur": "droogvoer", "fase": "puppy",  "graanvrij": false, "biologisch": false, "maten": ["2kg","4kg"] },
+        { "naam": "Puppy Medium",        "textuur": "droogvoer", "fase": "puppy",  "graanvrij": false, "biologisch": false, "maten": ["4kg","10kg"] },
+        { "naam": "Puppy Maxi",          "textuur": "droogvoer", "fase": "puppy",  "graanvrij": false, "biologisch": false, "maten": ["10kg","15kg"] },
+        { "naam": "Sensitivity Control", "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["7kg","14kg"] },
+        { "naam": "Gastro Intestinal",   "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["7.5kg","15kg"] },
+        { "naam": "Hypoallergenic",      "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["7kg","14kg"] },
+        { "naam": "Medium Adult Natvoer","textuur": "natvoer",   "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["24x100g"] },
+        { "naam": "Gastro Intestinal Natvoer","textuur":"natvoer","fase":"adult",  "graanvrij": false, "biologisch": false, "maten": ["12x410g"] }
+      ]
+    },
+    {
+      "slug": "hills",
+      "naam": "Hill's Science Plan",
+      "producten": [
+        { "naam": "Adult Small & Mini Kip",    "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["3kg","6kg"] },
+        { "naam": "Adult Medium Kip",          "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["12kg","18kg"] },
+        { "naam": "Adult Large Breed Kip",     "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["12kg","18kg"] },
+        { "naam": "Puppy Medium Kip",          "textuur": "droogvoer", "fase": "puppy",  "graanvrij": false, "biologisch": false, "maten": ["12kg","18kg"] },
+        { "naam": "Sensitive Stomach",         "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["12kg"] },
+        { "naam": "Perfect Weight",            "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["10kg"] },
+        { "naam": "Adult Natvoer Kip 12-pack", "textuur": "natvoer",   "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["12x370g"] },
+        { "naam": "Adult Natvoer Rund 12-pack","textuur": "natvoer",   "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["12x370g"] }
+      ]
+    },
+    {
+      "slug": "purina",
+      "naam": "Purina Pro Plan",
+      "producten": [
+        { "naam": "Adult Medium Kip",          "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["7kg","14kg"] },
+        { "naam": "Adult Large Robust Kip",    "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["14kg"] },
+        { "naam": "Adult Sensitive Zalm",      "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["7kg","14kg"] },
+        { "naam": "Adult Sensitive Huid Zalm", "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["7kg","14kg"] },
+        { "naam": "Puppy Medium Kip",          "textuur": "droogvoer", "fase": "puppy",  "graanvrij": false, "biologisch": false, "maten": ["7kg","12kg"] },
+        { "naam": "Sport Adult 30/20",         "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["14kg"] },
+        { "naam": "Adult Zalm Graanvrij",      "textuur": "droogvoer", "fase": "adult",  "graanvrij": true,  "biologisch": false, "maten": ["7kg","12kg"] },
+        { "naam": "Duo Delice Rund 10-pack",   "textuur": "natvoer",   "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["10x100g"] }
+      ]
+    },
+    {
+      "slug": "purina-beneful",
+      "naam": "Purina Beneful",
+      "producten": [
+        { "naam": "Originals Rund",       "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["3kg","7.5kg","15kg"] },
+        { "naam": "Originals Kip",        "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["3kg","7.5kg"] },
+        { "naam": "Graanvrij Rund",       "textuur": "droogvoer", "fase": "adult",  "graanvrij": true,  "biologisch": false, "maten": ["6kg"] },
+        { "naam": "Preparatos Rund",      "textuur": "natvoer",   "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["24x100g"] },
+        { "naam": "Preparatos Kip",       "textuur": "natvoer",   "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["24x100g"] }
+      ]
+    },
+    {
+      "slug": "eukanuba",
+      "naam": "Eukanuba",
+      "producten": [
+        { "naam": "Adult Small Breed Kip",  "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["3.5kg","7.5kg"] },
+        { "naam": "Adult Medium Breed Kip", "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["5kg","12kg","15kg"] },
+        { "naam": "Adult Large Breed Kip",  "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["12kg","15kg"] },
+        { "naam": "Puppy Medium Breed",     "textuur": "droogvoer", "fase": "puppy",  "graanvrij": false, "biologisch": false, "maten": ["5kg","12kg"] },
+        { "naam": "Senior Medium Breed",    "textuur": "droogvoer", "fase": "senior", "graanvrij": false, "biologisch": false, "maten": ["5kg","12kg"] },
+        { "naam": "Sporting",               "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["12kg"] }
+      ]
+    },
+    {
+      "slug": "iams",
+      "naam": "Iams",
+      "producten": [
+        { "naam": "Adult Small/Medium Kip", "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["3kg","7kg","12kg"] },
+        { "naam": "Adult Large Breed Kip",  "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["12kg"] },
+        { "naam": "Puppy Kip",              "textuur": "droogvoer", "fase": "puppy",  "graanvrij": false, "biologisch": false, "maten": ["3kg","7kg","12kg"] },
+        { "naam": "Senior Kip",             "textuur": "droogvoer", "fase": "senior", "graanvrij": false, "biologisch": false, "maten": ["3kg","7kg"] }
+      ]
+    },
+    {
+      "slug": "pedigree",
+      "naam": "Pedigree",
+      "producten": [
+        { "naam": "Adult Rund & Gevogelte", "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["3kg","10kg","15kg"] },
+        { "naam": "Adult Kip",              "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["10kg"] },
+        { "naam": "Puppy Kip",              "textuur": "droogvoer", "fase": "puppy",  "graanvrij": false, "biologisch": false, "maten": ["3kg","10kg"] },
+        { "naam": "Adult Natvoer Rund",     "textuur": "natvoer",   "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["24x400g"] },
+        { "naam": "DentaStix Medium 7-pack","textuur": "snacks",    "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["7st","28st"] }
+      ]
+    },
+    {
+      "slug": "josera",
+      "naam": "Josera",
+      "producten": [
+        { "naam": "Nature Croq Rund & Aardappel","textuur":"droogvoer","fase":"adult", "graanvrij": true,  "biologisch": false, "maten": ["5kg","15kg","26kg"] },
+        { "naam": "SensiPlus",              "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["5kg","15kg"] },
+        { "naam": "Happy Dog",              "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["5kg","15kg"] },
+        { "naam": "Puppy Sensitive",        "textuur": "droogvoer", "fase": "puppy",  "graanvrij": false, "biologisch": false, "maten": ["5kg","15kg"] }
+      ]
+    },
+    {
+      "slug": "frolic",
+      "naam": "Frolic",
+      "producten": [
+        { "naam": "Complete Kip & Groenten","textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["2.6kg","7.5kg","15kg"] },
+        { "naam": "Complete Zalm",          "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["2.6kg","7.5kg"] },
+        { "naam": "Complete Lam",           "textuur": "droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["7.5kg"] }
+      ]
+    },
+    {
+      "slug": "edgard-cooper",
+      "naam": "Edgard & Cooper",
+      "producten": [
+        { "naam": "Adult Vrije Uitloop Kip","textuur": "droogvoer", "fase": "adult",  "graanvrij": true,  "biologisch": true,  "maten": ["2.5kg","7kg","12kg"] },
+        { "naam": "Adult Zalm & Kalkoen",   "textuur": "droogvoer", "fase": "adult",  "graanvrij": true,  "biologisch": true,  "maten": ["2.5kg","7kg","12kg"] },
+        { "naam": "Puppy Kip & Zalm",       "textuur": "droogvoer", "fase": "puppy",  "graanvrij": true,  "biologisch": true,  "maten": ["2.5kg","7kg"] },
+        { "naam": "Senior Kip",             "textuur": "droogvoer", "fase": "senior", "graanvrij": true,  "biologisch": true,  "maten": ["2.5kg","7kg"] },
+        { "naam": "Adult Natvoer Rund",     "textuur": "natvoer",   "fase": "adult",  "graanvrij": true,  "biologisch": true,  "maten": ["12x100g"] }
+      ]
+    },
+    {
+      "slug": "bonzo",
+      "naam": "Bonzo",
+      "producten": [
+        { "naam": "Natvoer Rund & Groenten","textuur": "natvoer",   "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["12x400g"] },
+        { "naam": "Natvoer Kip & Groenten", "textuur": "natvoer",   "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["12x400g"] }
+      ]
+    },
+    {
+      "slug": "perfect-fit",
+      "naam": "Perfect Fit",
+      "producten": [
+        { "naam": "Adult Medium Kip & Rijst","textuur":"droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["6kg","12kg"] },
+        { "naam": "Adult Small Kip",         "textuur":"droogvoer", "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["6kg"] },
+        { "naam": "Senior Kip",              "textuur":"droogvoer", "fase": "senior", "graanvrij": false, "biologisch": false, "maten": ["6kg","12kg"] },
+        { "naam": "Adult Natvoer",           "textuur":"natvoer",   "fase": "adult",  "graanvrij": false, "biologisch": false, "maten": ["12x100g"] }
+      ]
+    }
+  ]
+}
