@@ -106,11 +106,34 @@ function bouwDeal(winkel, winkelnaam, i, naam, merkVeld, prijsStr, rrpStr, afbee
   };
 }
 
-function parseAwinCSV(csv, winkel, winkelnaam) {
+function parseAwinCSV(csv, winkel, winkelnaam, debugInfo) {
   const lines = csv.split("\n");
   if (lines.length < 2) return [];
   const headers = lines[0].split("|").map(h => h.trim().toLowerCase());
   const col = (row, name) => { const i = headers.indexOf(name); return i >= 0 ? (row[i]||"").trim() : ""; };
+
+  if (debugInfo) {
+    debugInfo.aantalRegels = lines.length - 1;
+    debugInfo.kolommen = headers.join(", ");
+    let hondenMatches = 0, kortingMatches = 0, voorbeeldNamen = [];
+    for (let i = 1; i < Math.min(lines.length, 5001); i++) {
+      const row = lines[i].split("|");
+      const naam = col(row,"product_name")||col(row,"name");
+      const cat  = col(row,"category_name")||col(row,"merchant_category");
+      if (!naam) continue;
+      if (isHondenvoer(naam, cat)) {
+        hondenMatches++;
+        if (voorbeeldNamen.length < 5) voorbeeldNamen.push(naam);
+        const prijs = parseFloat((col(row,"search_price")||"0").replace(",","."));
+        const rrp   = parseFloat((col(row,"rrp")||col(row,"display_price")||col(row,"store_price")||"0").replace(",","."));
+        if (kortingPct(rrp, prijs) >= 35) kortingMatches++;
+      }
+    }
+    debugInfo.hondenvoerMatches = hondenMatches;
+    debugInfo.kortingMatches = kortingMatches;
+    debugInfo.voorbeeldNamen = voorbeeldNamen;
+  }
+
   return lines.slice(1).map((line, i) => {
     const row = line.split("|");
     return bouwDeal(winkel, winkelnaam, i,
@@ -201,7 +224,7 @@ async function fetchFeed({ winkel, naam, url, type }, debugInfo) {
     }
     if (type === "daisycon")     return parseDaisyconXML(text, winkel, naam);
     if (type === "tradetracker") return parseTradeTrackerXML(text, winkel, naam);
-    return parseAwinCSV(text, winkel, naam);
+    return parseAwinCSV(text, winkel, naam, debugInfo);
   } catch(err) {
     console.error(`Feed fout ${naam}:`, err.message);
     if (debugInfo) debugInfo.fout = err.message;
