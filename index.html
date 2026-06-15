@@ -416,7 +416,7 @@
 
       return `
       <div class="deal-card" style="animation-delay:${i * 0.05}s">
-        <span class="korting-badge">-${d.korting}%</span>
+        ${d.korting > 0 ? `<span class="korting-badge">-${d.korting}%</span>` : ''}
         <span class="winkel-badge">${d.winkelnaam}</span>
         <button class="fav-btn ${isFav ? 'actief' : ''}"
           title="${isFav ? 'Verwijderen uit favorieten' : 'Toevoegen aan favorieten'}"

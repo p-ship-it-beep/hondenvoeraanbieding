@@ -1,11 +1,11 @@
 const FEEDS = [
-  { winkel:"zooplus",   naam:"Zooplus",   url: process.env.FEED_ZOOPLUS   || "", type:"awin" },
-  { winkel:"brekz",     naam:"Brekz",     url: process.env.FEED_BREKZ     || "", type:"awin" },
-  { winkel:"medpets",   naam:"Medpets",   url: process.env.FEED_MEDPETS   || "", type:"awin" },
-  { winkel:"petsplace", naam:"Petsplace", url: process.env.FEED_PETSPLACE || "", type:"daisycon" },
-  { winkel:"bitiba",    naam:"Bitiba",    url: process.env.FEED_BITIBA    || "", type:"awin" },
-  { winkel:"bol",       naam:"Bol.com",   url: process.env.FEED_BOL       || "", type:"awin" },
-  { winkel:"joybuy",    naam:"Joybuy",    url: process.env.FEED_JOYBUY    || "", type:"awin" },
+  { winkel:"zooplus",   naam:"Zooplus",   url: process.env.FEED_ZOOPLUS   || "", type:"awin",     minKorting:35 },
+  { winkel:"brekz",     naam:"Brekz",     url: process.env.FEED_BREKZ     || "", type:"awin",     minKorting:35 },
+  { winkel:"medpets",   naam:"Medpets",   url: process.env.FEED_MEDPETS   || "", type:"awin",     minKorting:35 },
+  { winkel:"petsplace", naam:"Petsplace", url: process.env.FEED_PETSPLACE || "", type:"daisycon", minKorting:35 },
+  { winkel:"bitiba",    naam:"Bitiba",    url: process.env.FEED_BITIBA    || "", type:"awin",     minKorting:35 },
+  { winkel:"bol",       naam:"Bol.com",   url: process.env.FEED_BOL       || "", type:"awin",     minKorting:35 },
+  { winkel:"joybuy",    naam:"Joybuy",    url: process.env.FEED_JOYBUY    || "", type:"awin",     minKorting:0  },
 ];
 
 const HONDEN_KEYWORDS = ["hond","dog","canin","puppy","honden","kibble","brokjes","hondenvoer","adult dog","dog food","chien"];
@@ -79,14 +79,14 @@ function kortingPct(oud, nieuw) {
   return Math.round(((oud - nieuw) / oud) * 100);
 }
 
-function bouwDeal(winkel, winkelnaam, i, naam, merkVeld, prijsStr, rrpStr, afbeelding, url, categorie) {
+function bouwDeal(winkel, winkelnaam, i, naam, merkVeld, prijsStr, rrpStr, afbeelding, url, categorie, minKorting = 35) {
   if (!naam || !url) return null;
   const prijs = parseFloat((prijsStr||"").replace(",","."));
   const rrp   = parseFloat((rrpStr||"").replace(",","."));
   if (isNaN(prijs)) return null;
   if (!isHondenvoer(naam, categorie)) return null;
   const pct = kortingPct(rrp, prijs);
-  if (pct < 35) return null;
+  if (pct < minKorting) return null;
   const merk = detectMerk(naam, merkVeld);
   const bijzonder = detectBijzonder(naam);
   return {
@@ -106,7 +106,7 @@ function bouwDeal(winkel, winkelnaam, i, naam, merkVeld, prijsStr, rrpStr, afbee
   };
 }
 
-function parseAwinCSV(csv, winkel, winkelnaam, debugInfo) {
+function parseAwinCSV(csv, winkel, winkelnaam, debugInfo, minKorting = 35) {
   const lines = csv.split("\n");
   if (lines.length < 2) return [];
   const headers = lines[0].split("|").map(h => h.trim().toLowerCase());
@@ -143,7 +143,8 @@ function parseAwinCSV(csv, winkel, winkelnaam, debugInfo) {
       col(row,"rrp")||col(row,"was_price")||col(row,"display_price")||col(row,"store_price"),
       col(row,"merchant_image_url")||col(row,"image_url")||col(row,"aw_image_url"),
       col(row,"aw_deep_link")||col(row,"merchant_deep_link"),
-      col(row,"category_name")||col(row,"merchant_category")
+      col(row,"category_name")||col(row,"merchant_category"),
+      minKorting
     );
   }).filter(Boolean);
 }
@@ -208,7 +209,7 @@ async function decompress(res, feedUrl) {
   return res.text();
 }
 
-async function fetchFeed({ winkel, naam, url, type }, debugInfo) {
+async function fetchFeed({ winkel, naam, url, type, minKorting = 35 }, debugInfo) {
   if (!url) return [];
   try {
     const res = await fetch(url, {
@@ -224,7 +225,7 @@ async function fetchFeed({ winkel, naam, url, type }, debugInfo) {
     }
     if (type === "daisycon")     return parseDaisyconXML(text, winkel, naam);
     if (type === "tradetracker") return parseTradeTrackerXML(text, winkel, naam);
-    return parseAwinCSV(text, winkel, naam, debugInfo);
+    return parseAwinCSV(text, winkel, naam, debugInfo, minKorting);
   } catch(err) {
     console.error(`Feed fout ${naam}:`, err.message);
     if (debugInfo) debugInfo.fout = err.message;
