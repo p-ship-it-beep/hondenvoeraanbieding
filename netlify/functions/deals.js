@@ -117,8 +117,8 @@ function parseAwinCSV(csv, winkel, winkelnaam) {
       col(row,"product_name")||col(row,"name"),
       col(row,"brand_name")||col(row,"brand"),
       col(row,"search_price")||col(row,"price"),
-      col(row,"rrp")||col(row,"was_price"),
-      col(row,"image_url")||col(row,"aw_image_url"),
+      col(row,"rrp")||col(row,"was_price")||col(row,"display_price")||col(row,"store_price"),
+      col(row,"merchant_image_url")||col(row,"image_url")||col(row,"aw_image_url"),
       col(row,"aw_deep_link")||col(row,"merchant_deep_link"),
       col(row,"category_name")||col(row,"merchant_category")
     );
