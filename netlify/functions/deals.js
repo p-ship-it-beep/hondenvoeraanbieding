@@ -209,9 +209,15 @@ const DEMO = [
   { id:"d9", winkel:"joybuy",    winkelnaam:"Joybuy",    naam:"Iams Adult Medium Breed Kip Biologisch 12kg",            merk:"iams",          merkNaam:"Iams",            textuur:"droogvoer", fase:"adult",  graanvrij:false, biologisch:true,  prijs:"11.49", prijsOud:"20.19", korting:43, besparing:"8.70",  afbeelding:"", url:"#", gratis_verzending:true },
 ];
 
-exports.handler = async function() {
+exports.handler = async function(event) {
+  const debug = event.queryStringParameters && event.queryStringParameters.debug === '1';
   try {
-    const results = await Promise.all(FEEDS.map(fetchFeed));
+    const debugInfo = [];
+    const results = await Promise.all(FEEDS.map(async (feed) => {
+      const deals = await fetchFeed(feed);
+      if (debug) debugInfo.push({ winkel: feed.naam, url: feed.url ? '✓ ingesteld' : '✗ ontbreekt', deals: deals.length });
+      return deals;
+    }));
     let deals = results.flat();
     const isDemo = deals.length === 0;
     if (isDemo) deals = DEMO;
@@ -223,7 +229,7 @@ exports.handler = async function() {
         "Cache-Control": "public, max-age=3600",
         "Access-Control-Allow-Origin": "*"
       },
-      body: JSON.stringify({ deals, isDemo, bijgewerkt: new Date().toISOString() }),
+      body: JSON.stringify({ deals, isDemo, bijgewerkt: new Date().toISOString(), ...(debug && { debug: debugInfo }) }),
     };
   } catch(err) {
     return { statusCode:500, body: JSON.stringify({ error: err.message }) };
