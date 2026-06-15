@@ -164,15 +164,30 @@ function parseTradeTrackerXML(xml, winkel, winkelnaam) {
   }).filter(Boolean);
 }
 
+const zlib = require('zlib');
+const { promisify } = require('util');
+const gunzip = promisify(zlib.gunzip);
+
+async function decompress(res) {
+  const contentType = res.headers.get('content-type') || '';
+  const url = res.url || '';
+  const isGzip = contentType.includes('gzip') || url.endsWith('.gz');
+  if (isGzip) {
+    const buf = Buffer.from(await res.arrayBuffer());
+    return (await gunzip(buf)).toString('utf-8');
+  }
+  return res.text();
+}
+
 async function fetchFeed({ winkel, naam, url, type }) {
   if (!url) return [];
   try {
     const res = await fetch(url, {
       headers: { "User-Agent": "HondenvoerDeal/1.0" },
-      signal: AbortSignal.timeout(10000),
+      signal: AbortSignal.timeout(15000),
     });
     if (!res.ok) return [];
-    const text = await res.text();
+    const text = await decompress(res);
     if (type === "daisycon")     return parseDaisyconXML(text, winkel, naam);
     if (type === "tradetracker") return parseTradeTrackerXML(text, winkel, naam);
     return parseAwinCSV(text, winkel, naam);
