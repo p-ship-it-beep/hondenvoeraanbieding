@@ -123,10 +123,17 @@ function parseAwinCSV(csv, winkel, winkelnaam, debugInfo, minKorting = 35) {
       if (!naam) continue;
       if (isHondenvoer(naam, cat)) {
         hondenMatches++;
-        if (voorbeeldNamen.length < 5) voorbeeldNamen.push(naam);
-        const prijs = parseFloat((col(row,"search_price")||"0").replace(",","."));
-        const rrp   = parseFloat((col(row,"rrp")||col(row,"display_price")||col(row,"store_price")||"0").replace(",","."));
+        const prijs        = parseFloat((col(row,"search_price")||"0").replace(",","."));
+        const storePrijs   = col(row,"store_price");
+        const displayPrijs = col(row,"display_price");
+        const rrpPrijs     = col(row,"rrp");
+        const rrp = parseFloat((rrpPrijs||displayPrijs||storePrijs||"0").replace(",","."));
         if (kortingPct(rrp, prijs) >= 35) kortingMatches++;
+        if (voorbeeldNamen.length < 5) voorbeeldNamen.push({
+          naam, search_price: col(row,"search_price"),
+          store_price: storePrijs, display_price: displayPrijs, rrp: rrpPrijs,
+          korting: kortingPct(rrp, prijs)
+        });
       }
     }
     debugInfo.hondenvoerMatches = hondenMatches;
