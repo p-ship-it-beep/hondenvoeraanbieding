@@ -8,7 +8,19 @@ const FEEDS = [
   { winkel:"joybuy",    naam:"Joybuy",    url: process.env.FEED_JOYBUY    || "", type:"awin",     minKorting:0  },
 ];
 
-const HONDEN_KEYWORDS = ["hond","dog","canin","puppy","honden","kibble","brokjes","hondenvoer","adult dog","dog food","chien"];
+// Directe hondenvoer-indicatoren (altijd doorlaten)
+const VOER_DIRECT = ["hondenvoer","dog food","hondensnack","hondensnacks","kibble","brokjes","droogvoer","natvoer","canin","hondenvoeding"];
+
+// Speelgoed/non-food merken altijd blokkeren
+const VOER_UITSLUIT = ["lego","schleich","playmobil","pokemon","brewdog","hondashi","bulldog sauce","speelgoed","figurine","figuur","robot hond"];
+
+// Voedselingrediënten/-types die vereist zijn als "hond/dog" het enige signaal is
+const VOER_INGREDIENTEN = [
+  /\bvoer\b/,/snack/,/treat\b/,/traktatie/,/knabbel/,
+  /\bvlees\b/,/\bkip\b/,/\brund\b/,/\blam\b/,/zalm/,/\bvis\b/,
+  /\bchicken\b/,/\bbeef\b/,/\bsalmon\b/,/\blamb\b/,/\bfish\b/,
+  /pat[eé]/,/\bbrok/,/recept/,/ingredi/,/grain/,/graanvrij/,/\bmeat/,
+];
 
 const MERK_MAP = {
   "royal canin":"royal-canin","royalcanin":"royal-canin",
@@ -70,8 +82,21 @@ function detectFase(naam) {
 }
 
 function isHondenvoer(naam, categorie = "") {
-  const tekst = (naam + " " + categorie).toLowerCase();
-  return HONDEN_KEYWORDS.some(k => tekst.includes(k));
+  const tekst = (naam + " " + categorie).toLowerCase().replace(/['"„"«»]/g, ' ');
+
+  // Speelgoed, bier en andere non-food merken blokkeren
+  if (VOER_UITSLUIT.some(k => tekst.includes(k))) return false;
+
+  // Directe hondenvoer-termen → altijd voer
+  if (VOER_DIRECT.some(k => tekst.includes(k))) return true;
+
+  // "hond(en)" of "dog" als zelfstandig woord (vermijdt Hondashi, BrewDog, DOGADAN, Bulldog)
+  const heeftHond = /\bhond(en)?\b/.test(tekst) || /\bdog\b/.test(tekst) ||
+                    tekst.includes("puppy") || tekst.includes("chien");
+  if (!heeftHond) return false;
+
+  // Als enige signaal "hond/dog" is: verplicht ook een voedselingredient
+  return VOER_INGREDIENTEN.some(r => r.test(tekst));
 }
 
 function kortingPct(oud, nieuw) {
