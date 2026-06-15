@@ -5,7 +5,7 @@ const FEEDS = [
   { winkel:"petsplace", naam:"Petsplace", url: process.env.FEED_PETSPLACE || "", type:"daisycon" },
   { winkel:"bitiba",    naam:"Bitiba",    url: process.env.FEED_BITIBA    || "", type:"awin" },
   { winkel:"bol",       naam:"Bol.com",   url: process.env.FEED_BOL       || "", type:"awin" },
-  { winkel:"joybuy",    naam:"Joybuy",    url: process.env.FEED_JOYBUY    || "", type:"daisycon" },
+  { winkel:"joybuy",    naam:"Joybuy",    url: process.env.FEED_JOYBUY    || "", type:"awin" },
 ];
 
 const HONDEN_KEYWORDS = ["hond","dog","canin","puppy","honden","kibble","brokjes","hondenvoer","adult dog","dog food","chien"];
