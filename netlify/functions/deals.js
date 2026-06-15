@@ -168,31 +168,43 @@ const zlib = require('zlib');
 const { promisify } = require('util');
 const gunzip = promisify(zlib.gunzip);
 
-async function decompress(res) {
+async function decompress(res, feedUrl) {
   const contentType = res.headers.get('content-type') || '';
-  const url = res.url || '';
-  const isGzip = contentType.includes('gzip') || url.endsWith('.gz');
+  const encoding = res.headers.get('content-encoding') || '';
+  const isGzip = contentType.includes('gzip') || contentType.includes('octet-stream') ||
+                 encoding.includes('gzip') || (feedUrl || '').includes('/compression/gzip');
   if (isGzip) {
     const buf = Buffer.from(await res.arrayBuffer());
-    return (await gunzip(buf)).toString('utf-8');
+    try {
+      return (await gunzip(buf)).toString('utf-8');
+    } catch(e) {
+      console.error('Gunzip mislukt, probeer raw tekst:', e.message);
+      return buf.toString('utf-8');
+    }
   }
   return res.text();
 }
 
-async function fetchFeed({ winkel, naam, url, type }) {
+async function fetchFeed({ winkel, naam, url, type }, debugInfo) {
   if (!url) return [];
   try {
     const res = await fetch(url, {
       headers: { "User-Agent": "HondenvoerDeal/1.0" },
       signal: AbortSignal.timeout(15000),
     });
+    if (debugInfo) debugInfo.status = res.status;
     if (!res.ok) return [];
-    const text = await decompress(res);
+    const text = await decompress(res, url);
+    if (debugInfo) {
+      debugInfo.bytes = text.length;
+      debugInfo.eersteRegel = text.split('\n')[0].substring(0, 120);
+    }
     if (type === "daisycon")     return parseDaisyconXML(text, winkel, naam);
     if (type === "tradetracker") return parseTradeTrackerXML(text, winkel, naam);
     return parseAwinCSV(text, winkel, naam);
   } catch(err) {
     console.error(`Feed fout ${naam}:`, err.message);
+    if (debugInfo) debugInfo.fout = err.message;
     return [];
   }
 }
@@ -214,8 +226,9 @@ exports.handler = async function(event) {
   try {
     const debugInfo = [];
     const results = await Promise.all(FEEDS.map(async (feed) => {
-      const deals = await fetchFeed(feed);
-      if (debug) debugInfo.push({ winkel: feed.naam, url: feed.url ? '✓ ingesteld' : '✗ ontbreekt', deals: deals.length });
+      const info = debug ? { winkel: feed.naam, url: feed.url ? '✓ ingesteld' : '✗ ontbreekt' } : null;
+      const deals = await fetchFeed(feed, info);
+      if (info) { info.deals = deals.length; debugInfo.push(info); }
       return deals;
     }));
     let deals = results.flat();
