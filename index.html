@@ -187,6 +187,41 @@
 
     @media(max-width:600px){.deals-grid{grid-template-columns:1fr 1fr;gap:12px}.card-naam{font-size:14px}.prijs-nieuw{font-size:20px}}
     @media(max-width:380px){.deals-grid{grid-template-columns:1fr}}
+
+    /* MODAL */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:500;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
+    .modal-overlay.open{display:flex}
+    .modal-box{background:var(--wit);border-radius:20px;max-width:720px;width:100%;max-height:92vh;overflow-y:auto;position:relative;box-shadow:0 24px 64px rgba(0,0,0,.35);animation:fadeUp .25s ease}
+    .modal-sluit{position:sticky;float:right;top:12px;right:0;margin:12px 12px 0 0;background:var(--groen-pale);border:none;border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer;color:var(--groen);display:flex;align-items:center;justify-content:center;z-index:2;flex-shrink:0}
+    .modal-sluit:hover{background:var(--rand)}
+    .modal-hoofd{display:flex;gap:20px;padding:20px 24px 20px;clear:both}
+    @media(max-width:520px){.modal-hoofd{flex-direction:column}}
+    .modal-img{width:170px;height:170px;object-fit:contain;border-radius:14px;background:var(--groen-ultra);padding:10px;flex-shrink:0}
+    @media(max-width:520px){.modal-img{width:100%;height:190px}}
+    .modal-info{flex:1;min-width:0}
+    .modal-merk-tag{font-size:11px;font-weight:700;color:var(--groen-mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+    .modal-naam{font-size:17px;font-weight:800;color:var(--tekst);line-height:1.3;margin-bottom:12px}
+    .modal-prijsrij{display:flex;align-items:baseline;gap:10px;margin-bottom:5px;flex-wrap:wrap}
+    .modal-prijs{font-size:26px;font-weight:900;color:var(--groen);letter-spacing:-1px}
+    .modal-oud{font-size:15px;color:var(--grijs);text-decoration:line-through}
+    .modal-kortbadge{background:var(--korting);color:#fff;font-size:12px;font-weight:700;padding:3px 9px;border-radius:12px}
+    .modal-kp{font-size:13px;color:var(--grijs);margin-bottom:10px}
+    .modal-winkelrij{font-size:13px;color:var(--grijs);margin-bottom:14px}
+    .modal-scheiding{height:1px;background:var(--rand);margin:0 24px}
+    .modal-vergelijk{padding:18px 24px 24px}
+    .modal-verg-titel{font-size:14px;font-weight:700;color:var(--grijs);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+    .modal-verg-lijst{display:flex;flex-direction:column;gap:8px}
+    .modal-verg-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1.5px solid var(--rand);border-radius:12px;cursor:pointer;transition:border-color .15s,background .15s;text-decoration:none}
+    .modal-verg-item:hover{border-color:var(--groen-mid);background:var(--groen-ultra)}
+    .modal-v-img{width:56px;height:56px;object-fit:contain;border-radius:8px;background:var(--groen-ultra);padding:4px;flex-shrink:0}
+    .modal-v-info{flex:1;min-width:0}
+    .modal-v-naam{font-size:13px;font-weight:600;color:var(--tekst);line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+    .modal-v-meta{font-size:12px;color:var(--grijs);margin-top:2px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+    .modal-v-korting{background:var(--korting);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px}
+    .modal-v-winkel{font-size:11px;color:var(--groen-mid);font-weight:600}
+    .modal-v-btn{background:var(--groen);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:14px;text-decoration:none;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .15s}
+    .modal-v-btn:hover{background:var(--groen-mid)}
+    .deal-card{cursor:pointer}
   </style>
 </head>
 <body>
@@ -329,9 +364,22 @@
   </div>
 </div>
 
+<!-- MODAL -->
+<div id="modal" class="modal-overlay" onclick="if(event.target===this)sluitModal()">
+  <div class="modal-box">
+    <button class="modal-sluit" onclick="sluitModal()">✕</button>
+    <div id="modal-inhoud"></div>
+  </div>
+</div>
+
 <footer>
   <p><strong style="color:#fff">HondenvoerDeal.nl</strong> — Dagelijks de beste hondenvoer aanbiedingen</p>
   <p>Wij vergelijken Zooplus · Brekz · Medpets · Petsplace · Bol.com · Bitiba en meer</p>
+  <nav style="margin-top:14px;display:flex;justify-content:center;gap:20px;flex-wrap:wrap">
+    <a href="/" style="color:rgba(255,255,255,.75);text-decoration:none;font-size:13px">🏠 Home</a>
+    <a href="/blog.html" style="color:rgba(255,255,255,.75);text-decoration:none;font-size:13px">📝 Blog</a>
+    <a href="/over-ons.html" style="color:rgba(255,255,255,.75);text-decoration:none;font-size:13px">ℹ️ Over ons</a>
+  </nav>
   <p style="margin-top:10px;font-size:11px">Deze site bevat affiliate links. Bij aankoop ontvangen wij een kleine commissie — zonder extra kosten voor jou.</p>
 </footer>
 
@@ -481,12 +529,12 @@
       const isFav   = favorieten.has(d.id);
 
       return `
-      <div class="deal-card" style="animation-delay:${i * 0.05}s">
+      <div class="deal-card" style="animation-delay:${i * 0.05}s" onclick="toonModal('${d.id}')">
         ${d.korting > 0 ? `<span class="korting-badge">-${d.korting}%</span>` : ''}
         <span class="winkel-badge">${d.winkelnaam}</span>
         <button class="fav-btn ${isFav ? 'actief' : ''}"
           title="${isFav ? 'Verwijderen uit favorieten' : 'Toevoegen aan favorieten'}"
-          onclick="toggleFavoriet('${d.id}', this)">${isFav ? '♥' : '♡'}</button>
+          onclick="event.stopPropagation();toggleFavoriet('${d.id}', this)">${isFav ? '♥' : '♡'}</button>
 
         <div class="card-foto">
           <img class="card-img" loading="lazy"
@@ -517,7 +565,7 @@
             ${d.besparing ? `<span class="besparing">Bespaar €${Number(d.besparing).toFixed(2).replace('.',',')}</span>` : ''}
             ${kpLabel ? `<span class="kiloprijs">${kpLabel}</span>` : ''}
           </div>
-          <a class="deal-btn" href="${d.url}" target="_blank" rel="noopener sponsored">Bekijk aanbieding</a>
+          <a class="deal-btn" href="${d.url}" target="_blank" rel="noopener sponsored" onclick="event.stopPropagation()">Bekijk aanbieding</a>
         </div>
 
         <div class="card-footer">
@@ -575,6 +623,79 @@
     });
     renderDeals();
   }
+
+  // ── MODAL PRIJSVERGELIJKING ──
+  function toonModal(dealId) {
+    const deal = alleDeals.find(d => d.id === dealId);
+    if (!deal) return;
+
+    const vergelijkbaar = alleDeals
+      .filter(d => d.merk === deal.merk && d.id !== deal.id)
+      .sort((a, b) => parseFloat(a.prijs) - parseFloat(b.prijs))
+      .slice(0, 10);
+
+    const ph = 'https://placehold.co/400x200/e8f5e3/2d5a27?text=';
+    const kpLabel = kiloprijsLabel(deal.prijs, deal.naam);
+    const fotoSrc = deal.afbeelding || `${ph}${encodeURIComponent((deal.merkNaam||deal.naam).substring(0,30))}`;
+
+    document.getElementById('modal-inhoud').innerHTML = `
+      <div class="modal-hoofd">
+        <img class="modal-img" loading="lazy" src="${fotoSrc}"
+             alt="${deal.naam}"
+             onerror="this.src='${ph}${encodeURIComponent(deal.naam.substring(0,30))}'"/>
+        <div class="modal-info">
+          <p class="modal-merk-tag">${deal.merkNaam || deal.merk}</p>
+          <h2 class="modal-naam">${deal.naam}</h2>
+          <div class="modal-prijsrij">
+            <span class="modal-prijs">€${Number(deal.prijs).toFixed(2).replace('.',',')}</span>
+            ${deal.prijsOud ? `<span class="modal-oud">€${Number(deal.prijsOud).toFixed(2).replace('.',',')}</span>` : ''}
+            ${deal.korting > 0 ? `<span class="modal-kortbadge">-${deal.korting}%</span>` : ''}
+          </div>
+          ${kpLabel ? `<p class="modal-kp">${kpLabel}</p>` : ''}
+          <p class="modal-winkelrij">Via <strong>${deal.winkelnaam}</strong>${deal.besparing ? ` · Bespaar €${Number(deal.besparing).toFixed(2).replace('.',',')}` : ''}</p>
+          <a class="deal-btn" href="${deal.url}" target="_blank" rel="noopener sponsored" onclick="event.stopPropagation()">
+            Bekijk bij ${deal.winkelnaam}
+          </a>
+        </div>
+      </div>
+      ${vergelijkbaar.length > 0 ? `
+      <div class="modal-scheiding"></div>
+      <div class="modal-vergelijk">
+        <p class="modal-verg-titel">Meer aanbiedingen van ${deal.merkNaam || deal.merk}</p>
+        <div class="modal-verg-lijst">
+          ${vergelijkbaar.map(v => {
+            const vkp = kiloprijsLabel(v.prijs, v.naam);
+            const vfoto = v.afbeelding || `${ph}${encodeURIComponent((v.merkNaam||v.naam).substring(0,20))}`;
+            return `
+            <a class="modal-verg-item" href="${v.url}" target="_blank" rel="noopener sponsored" onclick="event.stopPropagation()">
+              <img class="modal-v-img" loading="lazy" src="${vfoto}" alt="${v.naam}"
+                   onerror="this.src='${ph}${encodeURIComponent(v.naam.substring(0,20))}'"/>
+              <div class="modal-v-info">
+                <p class="modal-v-naam">${v.naam}</p>
+                <div class="modal-v-meta">
+                  <strong>€${Number(v.prijs).toFixed(2).replace('.',',')}</strong>
+                  ${v.korting > 0 ? `<span class="modal-v-korting">-${v.korting}%</span>` : ''}
+                  ${vkp ? `<span>· ${vkp}</span>` : ''}
+                </div>
+                <p class="modal-v-winkel">${v.winkelnaam}</p>
+              </div>
+              <span class="modal-v-btn">→</span>
+            </a>`;
+          }).join('')}
+        </div>
+      </div>` : ''}
+    `;
+
+    document.getElementById('modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function sluitModal() {
+    document.getElementById('modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') sluitModal(); });
 
   // ── START ──
   laadDeals();

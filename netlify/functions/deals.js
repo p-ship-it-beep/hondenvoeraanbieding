@@ -23,28 +23,82 @@ const VOER_INGREDIENTEN = [
 ];
 
 const MERK_MAP = {
+  // Mainstream A-merken
   "royal canin":"royal-canin","royalcanin":"royal-canin",
-  "hill's":"hills","hills":"hills","hills science":"hills",
+  "hill's":"hills","hills":"hills","hills science":"hills","hill's science":"hills",
   "purina pro plan":"purina","pro plan":"purina",
+  "purina one":"purina-one",
   "purina beneful":"purina-beneful","beneful":"purina-beneful",
-  "eukanuba":"eukanuba","pedigree":"pedigree","josera":"josera",
+  "eukanuba":"eukanuba",
+  "pedigree":"pedigree",
+  "iams":"iams",
+  "josera":"josera",
   "frolic":"frolic",
   "edgard":"edgard-cooper","edgard & cooper":"edgard-cooper","edgard cooper":"edgard-cooper",
-  "iams":"iams","bonzo":"bonzo",
+  "bonzo":"bonzo",
   "perfect fit":"perfect-fit","perfectfit":"perfect-fit",
+  "chappi":"chappi",
+  "vitakraft":"vitakraft",
+  "cesar":"cesar",
+  "butcher's":"butchers","butchers":"butchers",
+  "winalot":"winalot",
+  "goodboy":"goodboy","good boy":"goodboy",
+  "bakers":"bakers",
+  // Premium / Super-premium
   "acana":"acana",
   "orijen":"orijen",
   "farmina":"farmina","n&d":"farmina","n & d":"farmina",
   "ziwi peak":"ziwi","ziwipeak":"ziwi","ziwi":"ziwi",
   "animonda":"animonda","grancarno":"animonda",
   "wolfsblut":"wolfsblut","wolf's blut":"wolfsblut","wolfs blut":"wolfsblut",
-  "taste of the wild":"taste-of-the-wild","totw":"taste-of-the-wild",
+  "terra canis":"terra-canis","terracanis":"terra-canis",
   "mjamjam":"mjamjam","mjam mjam":"mjamjam",
   "inaba":"inaba",
   "rinti":"rinti",
   "trainer":"trainer",
   "happy dog":"happy-dog","happydog":"happy-dog",
-  "terra canis":"terra-canis",
+  "taste of the wild":"taste-of-the-wild","totw":"taste-of-the-wild",
+  "canagan":"canagan",
+  "brit care":"brit","brit premium":"brit",
+  "carnilove":"carnilove",
+  "belcando":"belcando",
+  "grau":"grau",
+  "rocco":"rocco",
+  "premiere":"premiere-petfood",
+  "smilla":"smilla",
+  "lukullus":"lukullus",
+  "christopherus":"christopherus",
+  "yarrah":"yarrah",
+  "trovet":"trovet",
+  "prins":"prins",
+  "julius-k9":"julius-k9","julius k9":"julius-k9","juliusk9":"julius-k9",
+  "purizon":"purizon",
+  "lily's kitchen":"lilys-kitchen","lilys kitchen":"lilys-kitchen",
+  "barking heads":"barking-heads",
+  "markus mühle":"markus-muhle","markus muhle":"markus-muhle",
+  "schesir":"schesir",
+  "defu":"defu",
+  "mac's":"macs",
+  "wahre liebe":"wahre-liebe",
+  "james wellbeloved":"james-wellbeloved",
+  "burns":"burns-petfood",
+  "harringtons":"harringtons",
+  "forthglade":"forthglade",
+  "merrick":"merrick",
+  "stella & chewy":"stella-chewy","stella and chewy":"stella-chewy",
+  "applaws":"applaws",
+  "naturo":"naturo",
+  "wainwright":"wainwrights","wainwright's":"wainwrights",
+  "simpsons premium":"simpsons",
+  "carna4":"carna4",
+  "nutrivet":"nutrivet",
+  "ontario":"ontario-petfood",
+  "platinum":"platinum-petfood",
+  "dukes farm":"dukes-farm","dukesfarm":"dukes-farm",
+  "concept for life":"concept-for-life",
+  "tails":"tails",
+  "bewital":"bewital",
+  "bosch":"bosch-petfood",
 };
 
 const TEXTUUR_MAP = [
@@ -112,6 +166,23 @@ function isHondenvoer(naam, categorie = "") {
   return VOER_INGREDIENTEN.some(r => r.test(tekst));
 }
 
+function isKattenproduct(naam, categorie = "") {
+  const tekst = (naam + " " + categorie).toLowerCase();
+  return (
+    /\bkat(ten)?\b/.test(tekst) ||
+    /\bcat\b/.test(tekst) ||
+    /\bfeline\b/.test(tekst) ||
+    /\bkitten\b/.test(tekst) ||
+    tekst.includes("pour chat") ||
+    tekst.includes("per gatto") ||
+    /\bkonijn(en)?\b/.test(tekst) ||
+    /\bhamster\b/.test(tekst) ||
+    /\bvogel(voer|zaad)\b/.test(tekst) ||
+    /\bbird food\b/.test(tekst) ||
+    /\baquar/.test(tekst)
+  );
+}
+
 function kortingPct(oud, nieuw) {
   if (!oud || !nieuw || oud <= nieuw) return 0;
   return Math.round(((oud - nieuw) / oud) * 100);
@@ -122,10 +193,11 @@ function bouwDeal(winkel, winkelnaam, i, naam, merkVeld, prijsStr, rrpStr, afbee
   const prijs = parseFloat((prijsStr||"").replace(",","."));
   const rrp   = parseFloat((rrpStr||"").replace(",","."));
   if (isNaN(prijs)) return null;
-  if (!isHondenvoer(naam, categorie)) return null;
+  const merk = detectMerk(naam, merkVeld);
+  if (merk.slug === "overig") return null;        // onbekend merk → overslaan
+  if (isKattenproduct(naam, categorie)) return null; // geen kat/konijn/vogelvoer
   const pct = kortingPct(rrp, prijs);
   if (pct < minKorting) return null;
-  const merk = detectMerk(naam, merkVeld);
   const bijzonder = detectBijzonder(naam);
   return {
     id: `${winkel}-${i}`,
