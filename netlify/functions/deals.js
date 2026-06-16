@@ -9,7 +9,15 @@ const FEEDS = [
 ];
 
 // Directe hondenvoer-indicatoren (altijd doorlaten)
-const VOER_DIRECT = ["hondenvoer","dog food","hondensnack","hondensnacks","kibble","brokjes","droogvoer","natvoer","canin","hondenvoeding"];
+const VOER_DIRECT = [
+  "hondenvoer","dog food","hondensnack","hondensnacks","kibble","brokjes","droogvoer","natvoer","canin","hondenvoeding",
+  // Rasgrootte-termen: uitsluitend gebruikt in diervoeding
+  "large breed","medium breed","small breed","mini breed","maxi breed","giant breed","all breed",
+  // Taalspecifieke "voor honden"-varianten
+  "voor honden","für hunde","for dogs","per cane","pour chien",
+  // Overige voer-specifieke termen
+  "complete dog","adult dog","puppy food","dog treat","dog snack","hondensnacks",
+];
 
 // Speelgoed/non-food merken altijd blokkeren
 const VOER_UITSLUIT = ["lego","schleich","playmobil","pokemon","brewdog","hondashi","bulldog sauce","speelgoed","figurine","figuur","robot hond"];
@@ -43,7 +51,6 @@ const MERK_MAP = {
   "butcher's":"butchers","butchers":"butchers",
   "winalot":"winalot",
   "goodboy":"goodboy","good boy":"goodboy",
-  "bakers":"bakers",
   // Premium / Super-premium
   "acana":"acana",
   "orijen":"orijen",
@@ -55,7 +62,6 @@ const MERK_MAP = {
   "mjamjam":"mjamjam","mjam mjam":"mjamjam",
   "inaba":"inaba",
   "rinti":"rinti",
-  "trainer":"trainer",
   "happy dog":"happy-dog","happydog":"happy-dog",
   "taste of the wild":"taste-of-the-wild","totw":"taste-of-the-wild",
   "canagan":"canagan",
@@ -81,7 +87,6 @@ const MERK_MAP = {
   "mac's":"macs",
   "wahre liebe":"wahre-liebe",
   "james wellbeloved":"james-wellbeloved",
-  "burns":"burns-petfood",
   "harringtons":"harringtons",
   "forthglade":"forthglade",
   "merrick":"merrick",
@@ -92,13 +97,9 @@ const MERK_MAP = {
   "simpsons premium":"simpsons",
   "carna4":"carna4",
   "nutrivet":"nutrivet",
-  "ontario":"ontario-petfood",
-  "platinum":"platinum-petfood",
   "dukes farm":"dukes-farm","dukesfarm":"dukes-farm",
   "concept for life":"concept-for-life",
-  "tails":"tails",
   "bewital":"bewital",
-  "bosch":"bosch-petfood",
 };
 
 const TEXTUUR_MAP = [
@@ -194,8 +195,9 @@ function bouwDeal(winkel, winkelnaam, i, naam, merkVeld, prijsStr, rrpStr, afbee
   const rrp   = parseFloat((rrpStr||"").replace(",","."));
   if (isNaN(prijs)) return null;
   const merk = detectMerk(naam, merkVeld);
-  if (merk.slug === "overig") return null;        // onbekend merk → overslaan
-  if (isKattenproduct(naam, categorie)) return null; // geen kat/konijn/vogelvoer
+  if (merk.slug === "overig") return null;           // onbekend merk → overslaan
+  if (isKattenproduct(naam, categorie)) return null;  // geen kat/konijn/vogelvoer
+  if (!isHondenvoer(naam, categorie)) return null;    // dubbele check: ook bekende merken kunnen non-food zijn (bijv. Bosch gereedschap)
   const pct = kortingPct(rrp, prijs);
   if (pct < minKorting) return null;
   const bijzonder = detectBijzonder(naam);
