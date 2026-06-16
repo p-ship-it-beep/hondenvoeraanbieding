@@ -51,6 +51,7 @@ const MERK_MAP = {
   "butcher's":"butchers","butchers":"butchers",
   "winalot":"winalot",
   "goodboy":"goodboy","good boy":"goodboy",
+  "meatyway":"meatyway","meaty way":"meatyway",
   // Premium / Super-premium
   "acana":"acana",
   "orijen":"orijen",
