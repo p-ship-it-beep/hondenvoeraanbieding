@@ -1,6 +1,6 @@
 const FEEDS = [
   { winkel:"zooplus",   naam:"Zooplus",   url: process.env.FEED_ZOOPLUS   || "", type:"awin",     minKorting:35 },
-  { winkel:"brekz",     naam:"Brekz",     url: process.env.FEED_BREKZ     || "", type:"awin",     minKorting:35 },
+  { winkel:"brekz",     naam:"Brekz",     url: process.env.FEED_BREKZ     || "", type:"tradetracker-csv", minKorting:0  },
   { winkel:"medpets",   naam:"Medpets",   url: process.env.FEED_MEDPETS   || "", type:"awin",     minKorting:35 },
   { winkel:"petsplace", naam:"Petsplace", url: process.env.FEED_PETSPLACE || "", type:"daisycon", minKorting:35 },
   { winkel:"bitiba",    naam:"Bitiba",    url: process.env.FEED_BITIBA    || "", type:"awin",     minKorting:35 },
@@ -289,6 +289,53 @@ function parseDaisyconXML(xml, winkel, winkelnaam) {
   }).filter(Boolean);
 }
 
+function parseTradeTrackerCSV(csv, winkel, winkelnaam, debugInfo, minKorting = 35) {
+  const lines = csv.split("\n");
+  if (lines.length < 2) return [];
+  const stripQ = (v) => (v || "").trim().replace(/^"|"$/g, '');
+  const headers = lines[0].split(";").map(h => stripQ(h).toLowerCase());
+  const col = (row, name) => { const i = headers.indexOf(name); return i >= 0 ? stripQ(row[i]) : ""; };
+
+  if (debugInfo) {
+    debugInfo.aantalRegels = lines.length - 1;
+    debugInfo.kolommen = headers.join(", ");
+    let hondenMatches = 0, kortingMatches = 0, voorbeeldNamen = [];
+    for (let i = 1; i < Math.min(lines.length, 5001); i++) {
+      const row = lines[i].split(";");
+      const naam = col(row, "name");
+      const cat  = col(row, "categories") || col(row, "categorypath");
+      if (!naam) continue;
+      if (isHondenvoer(naam, cat)) {
+        hondenMatches++;
+        const prijs = parseFloat((col(row, "price") || "0").replace(",", "."));
+        const rrp   = parseFloat((col(row, "fromprice") || "0").replace(",", "."));
+        if (kortingPct(rrp, prijs) >= 35) kortingMatches++;
+        if (voorbeeldNamen.length < 5) voorbeeldNamen.push({
+          naam, price: col(row, "price"), fromprice: col(row, "fromprice"),
+          brand: col(row, "brand"), korting: kortingPct(rrp, prijs)
+        });
+      }
+    }
+    debugInfo.hondenvoerMatches = hondenMatches;
+    debugInfo.kortingMatches    = kortingMatches;
+    debugInfo.voorbeeldNamen    = voorbeeldNamen;
+  }
+
+  return lines.slice(1).filter(l => l.trim()).map((line, i) => {
+    const row = line.split(";");
+    return bouwDeal(winkel, winkelnaam, i,
+      col(row, "name"),
+      col(row, "brand"),
+      col(row, "price"),
+      col(row, "fromprice"),
+      col(row, "imageurl") || col(row, "imageurl_large"),
+      col(row, "producturl"),
+      col(row, "categories") || col(row, "categorypath"),
+      minKorting
+    );
+  }).filter(Boolean);
+}
+
 function parseTradeTrackerXML(xml, winkel, winkelnaam) {
   const items = xml.match(/<product>([\s\S]*?)<\/product>/g) ||
                 xml.match(/<item>([\s\S]*?)<\/item>/g) || [];
@@ -344,8 +391,9 @@ async function fetchFeed({ winkel, naam, url, type, minKorting = 35 }, debugInfo
       debugInfo.bytes = text.length;
       debugInfo.eersteRegel = text.split('\n')[0].substring(0, 120);
     }
-    if (type === "daisycon")     return parseDaisyconXML(text, winkel, naam);
-    if (type === "tradetracker") return parseTradeTrackerXML(text, winkel, naam);
+    if (type === "daisycon")         return parseDaisyconXML(text, winkel, naam);
+    if (type === "tradetracker")     return parseTradeTrackerXML(text, winkel, naam);
+    if (type === "tradetracker-csv") return parseTradeTrackerCSV(text, winkel, naam, debugInfo, minKorting);
     return parseAwinCSV(text, winkel, naam, debugInfo, minKorting);
   } catch(err) {
     console.error(`Feed fout ${naam}:`, err.message);
