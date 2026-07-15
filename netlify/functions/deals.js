@@ -429,17 +429,13 @@ exports.handler = async function(event) {
     if (isDemo) deals = DEMO;
     deals.sort((a,b) => b.korting - a.korting);
 
-    // Subpagina-filters via query params
-    const qp = event.queryStringParameters || {};
-    if (qp.merk)  deals = deals.filter(d => d.merk  === qp.merk);
-    if (qp.soort) deals = deals.filter(d => d.textuur === qp.soort);
-    if (qp.fase)  deals = deals.filter(d => d.fase  === qp.fase);
-
     return {
       statusCode: 200,
       headers: {
         "Content-Type": "application/json",
-        "Cache-Control": "public, max-age=3600",
+        // s-maxage: Netlify CDN cached 1 uur; stale-while-revalidate: dient oude versie
+        // terwijl CDN op de achtergrond vernieuwt, zodat bezoekers nooit wachten.
+        "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
         "Access-Control-Allow-Origin": "*"
       },
       body: JSON.stringify({ deals, isDemo, bijgewerkt: new Date().toISOString(), ...(debug && { debug: debugInfo }) }),

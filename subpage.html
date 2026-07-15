@@ -450,15 +450,17 @@
       <div style="font-size:40px;margin-bottom:12px">🐾</div>
       <p style="font-size:16px">Aanbiedingen laden...</p></div>`;
 
-    const params = new URLSearchParams();
-    if (merkSlug)  params.set('merk',  merkSlug);
-    if (soortSlug) params.set('soort', soortSlug);
-    if (faseSlug)  params.set('fase',  faseSlug);
-
     try {
-      const res  = await fetch(`/.netlify/functions/deals?${params}`);
+      // Eén gecachte URL voor alle deals — Netlify CDN cacht 1 uur.
+      // Filtering op merk/soort/fase gebeurt hier client-side, zodat elke
+      // subpagina dezelfde (al gecachte) response hergebruikt.
+      const res  = await fetch('/.netlify/functions/deals');
       const data = await res.json();
-      alleDeals  = data.deals || [];
+      let deals  = data.deals || [];
+      if (merkSlug)  deals = deals.filter(d => d.merk    === merkSlug);
+      if (soortSlug) deals = deals.filter(d => d.textuur === soortSlug);
+      if (faseSlug)  deals = deals.filter(d => d.fase    === faseSlug);
+      alleDeals = deals;
       renderDeals();
     } catch {
       grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--grijs)">
