@@ -428,6 +428,13 @@ exports.handler = async function(event) {
     const isDemo = deals.length === 0;
     if (isDemo) deals = DEMO;
     deals.sort((a,b) => b.korting - a.korting);
+
+    // Subpagina-filters via query params
+    const qp = event.queryStringParameters || {};
+    if (qp.merk)  deals = deals.filter(d => d.merk  === qp.merk);
+    if (qp.soort) deals = deals.filter(d => d.textuur === qp.soort);
+    if (qp.fase)  deals = deals.filter(d => d.fase  === qp.fase);
+
     return {
       statusCode: 200,
       headers: {

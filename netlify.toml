@@ -4,3 +4,18 @@
 
 [functions]
   node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/:merk/:soort/:fase"
+  to = "/subpage.html"
+  status = 200
+
+[[redirects]]
+  from = "/:merk/:soort"
+  to = "/subpage.html"
+  status = 200
+
+[[redirects]]
+  from = "/:merk"
+  to = "/subpage.html"
+  status = 200
