@@ -6,6 +6,7 @@ const FEEDS = [
   { winkel:"bitiba",    naam:"Bitiba",    url: process.env.FEED_BITIBA    || "", type:"awin",     minKorting:35 },
   { winkel:"bol",       naam:"Bol.com",   url: process.env.FEED_BOL       || "", type:"awin",     minKorting:35 },
   { winkel:"joybuy",    naam:"Joybuy",    url: process.env.FEED_JOYBUY    || "", type:"awin",     minKorting:0  },
+  { winkel:"bella-duke",naam:"Bella & Duke",url: process.env.FEED_BELLA_DUKE || "", type:"awin",   minKorting:0  },
 ];
 
 // Directe hondenvoer-indicatoren (altijd doorlaten)
@@ -43,6 +44,7 @@ const MERK_MAP = {
   "josera":"josera",
   "frolic":"frolic",
   "edgard":"edgard-cooper","edgard & cooper":"edgard-cooper","edgard cooper":"edgard-cooper",
+  "bella & duke":"bella-duke","bella and duke":"bella-duke","bella duke":"bella-duke",
   "bonzo":"bonzo",
   "perfect fit":"perfect-fit","perfectfit":"perfect-fit",
   "chappi":"chappi",
@@ -261,7 +263,7 @@ function parseAwinCSV(csv, winkel, winkelnaam, debugInfo, minKorting = 35) {
       col(row,"product_name")||col(row,"name"),
       col(row,"brand_name")||col(row,"brand"),
       col(row,"search_price")||col(row,"price"),
-      col(row,"rrp")||col(row,"was_price")||col(row,"display_price")||col(row,"store_price"),
+      col(row,"rrp")||col(row,"rrp_price")||col(row,"was_price")||col(row,"display_price")||col(row,"store_price"),
       col(row,"merchant_image_url")||col(row,"image_url")||col(row,"aw_image_url"),
       col(row,"aw_deep_link")||col(row,"merchant_deep_link"),
       col(row,"category_name")||col(row,"merchant_category"),
