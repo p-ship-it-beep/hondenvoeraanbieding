@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prijsvergelijking | HondenvoerDeal.nl</title>
+  <meta name="description" content="Vergelijk de prijs van dit hondenvoer bij alle grote dierenwinkels." />
+  <link rel="canonical" href="https://hondenvoerdeal.nl/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="HondenvoerDeal.nl" />
+  <meta property="og:image" content="https://hondenvoerdeal.nl/og-image.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --groen:#2d5a27;--groen-mid:#4a7c3f;--groen-licht:#7ab369;
+      --groen-pale:#e8f5e3;--groen-ultra:#f3faf0;
+      --korting:#c0392b;--korting-bg:#fdf0ef;
+      --wit:#ffffff;--tekst:#1a2e17;--grijs:#6b7c6a;--rand:#d4e8ce;
+      --schaduw:0 4px 24px rgba(45,90,39,.10);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',sans-serif;background:var(--groen-ultra);color:var(--tekst);min-height:100vh}
+
+    /* HEADER */
+    header{background:var(--groen);background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%234a7c3f' fill-opacity='0.3'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");padding:0 20px;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.2)}
+    .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .logo-paw{font-size:26px;animation:wag 2s ease-in-out infinite;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2))}
+    @keyframes wag{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+    .logo-text{display:flex;align-items:baseline;gap:0;line-height:1}
+    .logo-hondenvoer{font-size:19px;font-weight:800;color:var(--wit);letter-spacing:-0.5px}
+    .logo-deal{font-size:19px;font-weight:900;color:var(--groen-licht);letter-spacing:-0.5px}
+    .logo-nl{font-size:13px;font-weight:500;color:rgba(255,255,255,.55);align-self:flex-end;margin-bottom:1px;margin-left:1px}
+    .logo-dot{color:var(--groen-licht);font-weight:900}
+    .header-badge{background:var(--groen-licht);color:var(--wit);font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;letter-spacing:.5px}
+
+    /* BREADCRUMB */
+    .breadcrumb{background:var(--groen-pale);border-bottom:1px solid var(--rand);padding:10px 20px}
+    .breadcrumb-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--grijs)}
+    .breadcrumb a{color:var(--groen-mid);text-decoration:none;font-weight:600}
+    .breadcrumb a:hover{text-decoration:underline}
+    .breadcrumb-sep{color:var(--rand);font-size:16px}
+    .breadcrumb-cur{color:var(--tekst);font-weight:700}
+
+    /* PRODUCT HERO */
+    .product-wrap{max-width:960px;margin:0 auto;padding:40px 20px 0}
+    .product-hero{display:flex;gap:40px;align-items:flex-start;background:var(--wit);border-radius:20px;padding:32px;box-shadow:var(--schaduw);border:2px solid var(--rand)}
+    @media(max-width:640px){.product-hero{flex-direction:column;gap:24px}}
+    .product-foto-wrap{flex-shrink:0;width:240px;height:240px;background:var(--groen-ultra);border-radius:16px;border:2px solid var(--rand);display:flex;align-items:center;justify-content:center;overflow:hidden}
+    @media(max-width:640px){.product-foto-wrap{width:100%;height:220px}}
+    .product-foto{width:100%;height:100%;object-fit:contain;padding:20px}
+    .product-info{flex:1;min-width:0}
+    .product-merk-tag{font-size:11px;font-weight:700;color:var(--groen-mid);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
+    .product-naam{font-size:clamp(18px,3vw,26px);font-weight:800;color:var(--tekst);line-height:1.25;margin-bottom:12px;letter-spacing:-0.3px}
+    .product-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+    .meta-pill{background:var(--groen-pale);color:var(--groen-mid);font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px}
+    .beste-prijs-box{background:var(--groen-ultra);border:2px solid var(--groen-licht);border-radius:14px;padding:20px 22px}
+    .beste-prijs-label{font-size:11px;font-weight:700;color:var(--groen-mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+    .beste-prijs-rij{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
+    .beste-prijs{font-size:34px;font-weight:900;color:var(--groen);letter-spacing:-1px}
+    .beste-prijs-oud{font-size:16px;color:var(--grijs);text-decoration:line-through}
+    .beste-korting{background:var(--korting);color:#fff;font-size:12px;font-weight:700;padding:3px 9px;border-radius:10px}
+    .beste-kiloprijs{font-size:13px;color:var(--grijs);margin-bottom:14px}
+    .deal-btn{display:inline-block;background:var(--groen);color:var(--wit);text-decoration:none;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;padding:13px 24px;border-radius:10px;transition:background .2s,transform .15s;border:none;cursor:pointer}
+    .deal-btn:hover{background:var(--groen-mid);transform:scale(1.02)}
+    .deal-btn::after{content:' →'}
+
+    /* VERGELIJK SECTIE */
+    .vergelijk-wrap{max-width:960px;margin:32px auto 60px;padding:0 20px}
+    .vergelijk-kop{font-size:18px;font-weight:800;color:var(--tekst);margin-bottom:16px;letter-spacing:-0.3px;display:flex;align-items:center;gap:10px}
+    .vergelijk-kop::after{content:'';flex:1;height:2px;background:var(--rand)}
+    .verg-rij{display:flex;align-items:center;gap:16px;padding:18px 20px;background:var(--wit);border:2px solid var(--rand);border-radius:14px;margin-bottom:10px;transition:border-color .2s;text-decoration:none;color:inherit}
+    .verg-rij:hover{border-color:var(--groen-mid)}
+    .verg-rij.beste{border-color:var(--groen-licht);background:var(--groen-ultra)}
+    .verg-positie{font-size:20px;font-weight:900;color:var(--groen-mid);width:28px;flex-shrink:0;text-align:center}
+    .verg-rij.beste .verg-positie{color:var(--groen)}
+    .verg-winkel-info{flex:1;min-width:0}
+    .verg-winkel-naam{font-size:15px;font-weight:700;color:var(--tekst)}
+    .verg-winkel-sub{font-size:12px;color:var(--grijs);margin-top:2px}
+    .verg-prijs-blok{text-align:right;flex-shrink:0}
+    .verg-prijs{font-size:22px;font-weight:800;color:var(--groen);letter-spacing:-0.5px}
+    .verg-rij.beste .verg-prijs{color:var(--groen)}
+    .verg-oud{font-size:13px;color:var(--grijs);text-decoration:line-through;display:block}
+    .verg-korting-pill{background:var(--korting);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:8px;display:inline-block;margin-top:2px}
+    .verg-btn{background:var(--groen);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .15s}
+    .verg-btn:hover{background:var(--groen-mid)}
+    .verg-beste-badge{background:var(--groen);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;display:inline-block;margin-bottom:3px;letter-spacing:.5px}
+    @media(max-width:520px){.verg-rij{flex-wrap:wrap;gap:10px}.verg-btn{width:100%;justify-content:center}}
+
+    /* TERUG LINK */
+    .terug-link{max-width:960px;margin:0 auto 20px;padding:0 20px}
+    .terug-a{color:var(--groen-mid);font-size:14px;font-weight:600;text-decoration:none}
+    .terug-a:hover{text-decoration:underline}
+
+    /* FOOTER */
+    footer{background:var(--groen);color:rgba(255,255,255,.7);text-align:center;padding:28px 20px;font-size:13px;line-height:1.8}
+
+    /* SKELETON / LOADING */
+    .laden{text-align:center;padding:80px 20px;color:var(--grijs)}
+    .laden-icon{font-size:48px;margin-bottom:16px;display:block;animation:pulse 1.5s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="/">
+      <span class="logo-paw">🐾</span>
+      <span class="logo-text">
+        <span class="logo-hondenvoer">Hondenvoer</span><span class="logo-dot">.</span><span class="logo-deal">Deal</span><span class="logo-nl">.nl</span>
+      </span>
+    </a>
+    <span class="header-badge">Dagelijks bijgewerkt</span>
+  </div>
+</header>
+
+<nav class="breadcrumb">
+  <div class="breadcrumb-inner" id="breadcrumb-inner">
+    <a href="/">Alle merken</a>
+  </div>
+</nav>
+
+<div id="product-content">
+  <div class="laden">
+    <span class="laden-icon">🐾</span>
+    <p>Productinformatie laden...</p>
+  </div>
+</div>
+
+<footer>
+  <p><strong style="color:#fff">HondenvoerDeal.nl</strong> — Dagelijks de beste hondenvoer aanbiedingen</p>
+  <p>Wij vergelijken Zooplus · Brekz · Medpets · Petsplace · Bol.com · Bitiba en meer</p>
+  <nav style="margin-top:14px;display:flex;justify-content:center;gap:20px;flex-wrap:wrap">
+    <a href="/" style="color:rgba(255,255,255,.75);text-decoration:none;font-size:13px">🏠 Home</a>
+    <a href="/blog.html" style="color:rgba(255,255,255,.75);text-decoration:none;font-size:13px">📝 Blog</a>
+    <a href="/over-ons.html" style="color:rgba(255,255,255,.75);text-decoration:none;font-size:13px">ℹ️ Over ons</a>
+  </nav>
+  <p style="margin-top:10px;font-size:11px">Deze site bevat affiliate links. Bij aankoop ontvangen wij een kleine commissie — zonder extra kosten voor jou.</p>
+</footer>
+
+<script>
+  const MERKEN = {
+    'royal-canin':'Royal Canin','hills':"Hill's Science",'purina':'Purina Pro Plan',
+    'purina-beneful':'Purina Beneful','eukanuba':'Eukanuba','pedigree':'Pedigree',
+    'josera':'Josera','frolic':'Frolic','edgard-cooper':'Edgard & Cooper','iams':'Iams',
+    'bonzo':'Bonzo','perfect-fit':'Perfect Fit','acana':'Acana','orijen':'Orijen',
+    'farmina':'Farmina','ziwi':'Ziwi Peak','animonda':'Animonda','wolfsblut':'Wolfsblut',
+    'taste-of-the-wild':'Taste of the Wild','happy-dog':'Happy Dog',
+  };
+
+  function slugify(str) {
+    return (str || '')
+      .toLowerCase()
+      .replace(/[àáâãäå]/g,'a').replace(/[èéêë]/g,'e')
+      .replace(/[ìíîï]/g,'i').replace(/[òóôõöø]/g,'o')
+      .replace(/[ùúûü]/g,'u').replace(/[ýÿ]/g,'y')
+      .replace(/[ñ]/g,'n').replace(/[ç]/g,'c').replace(/[ß]/g,'ss')
+      .replace(/&/g,'en').replace(/[^a-z0-9\s-]/g,'')
+      .replace(/\s+/g,'-').replace(/-+/g,'-')
+      .replace(/^-+|-+$/g,'');
+  }
+
+  function detectKg(naam) {
+    const m = naam.match(/(\d+[,.]?\d*)\s*kg/i);
+    if (m) return parseFloat(m[1].replace(',','.'));
+    const g = naam.match(/(\d+)\s*g\b/i);
+    if (g) return parseInt(g[1])/1000;
+    return null;
+  }
+  function kpLabel(prijs, naam) {
+    const kg = detectKg(naam);
+    if (!kg||kg<=0) return '';
+    return `€${(parseFloat(prijs)/kg).toFixed(2).replace('.',',')}/kg`;
+  }
+
+  // URL: /:merk/product/:slug
+  const urlParts = window.location.pathname.replace(/^\/|\/$/g,'').split('/').filter(Boolean);
+  const merkSlug    = urlParts[0] || '';
+  const productSlug = urlParts[2] || '';
+  const merkNaam    = MERKEN[merkSlug] || merkSlug;
+
+  const soortEmoji = { droogvoer:'🥣', natvoer:'🥫', snacks:'🦴' };
+  const faseNamen  = { puppy:'Puppy', adult:'Adult', senior:'Senior' };
+
+  async function laadProduct() {
+    try {
+      const res  = await fetch('/.netlify/functions/deals');
+      const data = await res.json();
+      const deals = (data.deals || []).filter(d =>
+        d.merk === merkSlug && slugify(d.naam) === productSlug
+      );
+
+      if (deals.length === 0) {
+        renderNietGevonden();
+        return;
+      }
+
+      const ref = deals[0];
+      const winkels = [...deals].sort((a,b) => parseFloat(a.prijs) - parseFloat(b.prijs));
+      renderProduct(ref, winkels);
+    } catch(e) {
+      document.getElementById('product-content').innerHTML = `
+        <div class="laden"><p>❌ Kon product niet laden. Probeer het later opnieuw.</p></div>`;
+    }
+  }
+
+  function renderProduct(ref, winkels) {
+    const beste  = winkels[0];
+    const ph     = 'https://placehold.co/400x400/e8f5e3/2d5a27?text=';
+    const foto   = ref.afbeelding || `${ph}${encodeURIComponent(ref.naam.substring(0,30))}`;
+    const kp     = kpLabel(beste.prijs, ref.naam);
+
+    // Breadcrumb
+    document.getElementById('breadcrumb-inner').innerHTML = `
+      <a href="/">Alle merken</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="/${merkSlug}/">${merkNaam}</a>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-cur">${ref.naam}</span>`;
+
+    // Title + canonical
+    document.title = `${ref.naam} – Vergelijk prijzen | HondenvoerDeal.nl`;
+    const canon = document.querySelector('link[rel="canonical"]');
+    if (canon) canon.href = 'https://hondenvoerdeal.nl' + window.location.pathname;
+
+    // Meta pills
+    const pills = [];
+    if (ref.textuur) pills.push(`${soortEmoji[ref.textuur]||''} ${ref.textuur.charAt(0).toUpperCase()+ref.textuur.slice(1)}`);
+    if (ref.fase && ref.fase !== 'adult') pills.push(faseNamen[ref.fase] || ref.fase);
+    if (ref.graanvrij)  pills.push('🌿 Graanvrij');
+    if (ref.biologisch) pills.push('🌱 Biologisch');
+
+    document.getElementById('product-content').innerHTML = `
+      <div class="product-wrap">
+        <div class="product-hero">
+          <div class="product-foto-wrap">
+            <img class="product-foto" src="${foto}" alt="${ref.naam}"
+                 onerror="this.src='${ph}${encodeURIComponent(ref.naam.substring(0,30))}'"/>
+          </div>
+          <div class="product-info">
+            <p class="product-merk-tag">${merkNaam}</p>
+            <h1 class="product-naam">${ref.naam}</h1>
+            ${pills.length ? `<div class="product-meta">${pills.map(p=>`<span class="meta-pill">${p}</span>`).join('')}</div>` : ''}
+            <div class="beste-prijs-box">
+              <p class="beste-prijs-label">Beste prijs nu</p>
+              <div class="beste-prijs-rij">
+                <span class="beste-prijs">€${Number(beste.prijs).toFixed(2).replace('.',',')}</span>
+                ${beste.prijsOud?`<span class="beste-prijs-oud">€${Number(beste.prijsOud).toFixed(2).replace('.',',')}</span>`:''}
+                ${beste.korting>0?`<span class="beste-korting">-${beste.korting}%</span>`:''}
+              </div>
+              ${kp?`<p class="beste-kiloprijs">${kp}</p>`:''}
+              <a class="deal-btn" href="${beste.url}" target="_blank" rel="noopener sponsored">
+                Bekijk bij ${beste.winkelnaam}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vergelijk-wrap">
+        <h2 class="vergelijk-kop">Prijsvergelijking (${winkels.length} ${winkels.length===1?'winkel':'winkels'})</h2>
+        ${winkels.map((w,i) => {
+          const vkp = kpLabel(w.prijs, ref.naam);
+          const isBeste = i === 0;
+          return `
+          <a class="verg-rij${isBeste?' beste':''}" href="${w.url}" target="_blank" rel="noopener sponsored">
+            <span class="verg-positie">${i===0?'🏆':i+1}</span>
+            <div class="verg-winkel-info">
+              ${isBeste?'<span class="verg-beste-badge">BESTE PRIJS</span>':''}
+              <p class="verg-winkel-naam">${w.winkelnaam}</p>
+              ${vkp?`<p class="verg-winkel-sub">${vkp}</p>`:''}
+            </div>
+            <div class="verg-prijs-blok">
+              <span class="verg-prijs">€${Number(w.prijs).toFixed(2).replace('.',',')}</span>
+              ${w.prijsOud?`<span class="verg-oud">€${Number(w.prijsOud).toFixed(2).replace('.',',')}</span>`:''}
+              ${w.korting>0?`<span class="verg-korting-pill">-${w.korting}%</span>`:''}
+            </div>
+            <span class="verg-btn">Bekijk →</span>
+          </a>`;
+        }).join('')}
+      </div>
+
+      <div class="terug-link">
+        <a class="terug-a" href="/${merkSlug}/">← Terug naar alle ${merkNaam} producten</a>
+      </div>`;
+  }
+
+  function renderNietGevonden() {
+    document.getElementById('breadcrumb-inner').innerHTML = `
+      <a href="/">Alle merken</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="/${merkSlug}/">${merkNaam}</a>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-cur">Product niet gevonden</span>`;
+    document.getElementById('product-content').innerHTML = `
+      <div class="laden">
+        <span class="laden-icon">🔍</span>
+        <p>Dit product is helaas niet meer beschikbaar of de aanbieding is verlopen.</p>
+        <p style="margin-top:16px"><a href="/${merkSlug}/" style="color:var(--groen-mid);font-weight:600">← Bekijk alle ${merkNaam} producten</a></p>
+      </div>`;
+  }
+
+  laadProduct();
+</script>
+
+<!-- TradeTracker SuperTag -->
+<script type="text/javascript">
+  var _TradeTrackerTagOptions = { t:'a', s:'511916', chk:'7a6390617dbd18b48127403ce497bff4', overrideOptions:{} };
+  (function(){var tt=document.createElement('script'),s=document.getElementsByTagName('script')[0];tt.setAttribute('type','text/javascript');tt.setAttribute('src',(document.location.protocol=='https:'?'https':'http')+'://tm.tradetracker.net/tag?t='+_TradeTrackerTagOptions.t+'&s='+_TradeTrackerTagOptions.s+'&chk='+_TradeTrackerTagOptions.chk);s.parentNode.insertBefore(tt,s);})();
+</script>
+</body>
+</html>

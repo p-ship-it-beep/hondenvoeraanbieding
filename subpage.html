@@ -240,7 +240,6 @@
       <button class="fbtn active" data-bijzonder="alle">Alle</button>
       <button class="fbtn" data-bijzonder="graanvrij">🌿 Graanvrij</button>
       <button class="fbtn" data-bijzonder="biologisch">🌱 Biologisch</button>
-      <button class="fbtn" style="border-color:#e91e63;color:#e91e63" data-bijzonder="favoriet">♥ Favorieten</button>
     </div>
   </div>
   <div class="filter-sectie">
@@ -259,11 +258,10 @@
 </div>
 
 <div class="sort-bar">
-  <p class="deals-count"><strong id="aantal">–</strong> aanbiedingen</p>
+  <p class="deals-count"><strong id="aantal">–</strong> producten</p>
   <select class="sort-select" id="sortering">
-    <option value="korting">Hoogste korting eerst</option>
-    <option value="prijs-laag">Prijs: laag → hoog</option>
     <option value="prijs-hoog">Prijs: hoog → laag</option>
+    <option value="prijs-laag">Prijs: laag → hoog</option>
     <option value="kiloprijs">Kiloprijs: laag → hoog</option>
   </select>
 </div>
@@ -296,7 +294,7 @@
 </footer>
 
 <script>
-  // ── DATA ──
+  // ── CONSTANTEN ──
   const MERKEN = {
     'royal-canin':'Royal Canin','hills':"Hill's Science",'purina':'Purina Pro Plan',
     'purina-beneful':'Purina Beneful','eukanuba':'Eukanuba','pedigree':'Pedigree',
@@ -330,93 +328,18 @@
     'happy-dog':{bg:'#f57f17',color:'#fff',text:'HAPPY DOG'},
   };
 
-  // ── URL PARSING ──
-  const path  = window.location.pathname.replace(/^\/|\/$/g, '');
-  const parts = path.split('/').filter(Boolean);
-  const [merkSlug, soortSlug, faseSlug] = parts;
-  const level = parts.length;
-
-  // ── STATE ──
-  let alleDeals  = [];
-  let favorieten = new Set(JSON.parse(localStorage.getItem('favorieten') || '[]'));
-  let actief     = { bijzonder:'alle', winkel:'alle' };
-
-  // ── PAGINA INITIALISEREN ──
-  function initPagina() {
-    // Canonical en title dynamisch
-    const merkNaam  = MERKEN[merkSlug]  || merkSlug;
-    const soortNaam = SOORTEN[soortSlug] || '';
-    const faseNaam  = FASEN[faseSlug]   || '';
-
-    let titleParts = [merkNaam];
-    if (soortNaam) titleParts.push(soortNaam.replace(/^\S+\s/,''));
-    if (faseNaam)  titleParts.push(faseNaam.replace(/^\S+\s/,''));
-    document.title = `${titleParts.join(' ')} aanbiedingen | HondenvoerDeal.nl`;
-
-    const canon = document.querySelector('link[rel="canonical"]');
-    if (canon) canon.href = 'https://hondenvoerdeal.nl' + window.location.pathname;
-
-    // Breadcrumb
-    const bc = document.getElementById('breadcrumb-inner');
-    let html = '<a href="/">Alle merken</a>';
-    if (merkSlug) {
-      html += `<span class="breadcrumb-sep">›</span>`;
-      if (level > 1) html += `<a href="/${merkSlug}/">${merkNaam}</a>`;
-      else           html += `<span class="breadcrumb-cur">${merkNaam}</span>`;
-    }
-    if (soortSlug) {
-      html += `<span class="breadcrumb-sep">›</span>`;
-      if (level > 2) html += `<a href="/${merkSlug}/${soortSlug}/">${soortNaam}</a>`;
-      else           html += `<span class="breadcrumb-cur">${soortNaam}</span>`;
-    }
-    if (faseSlug) {
-      html += `<span class="breadcrumb-sep">›</span><span class="breadcrumb-cur">${faseNaam}</span>`;
-    }
-    bc.innerHTML = html;
-
-    // Dropdowns instellen
-    const selMerk  = document.getElementById('sel-merk');
-    const selSoort = document.getElementById('sel-soort');
-    const selFase  = document.getElementById('sel-fase');
-
-    if (merkSlug) {
-      selMerk.value = merkSlug;
-      selMerk.classList.add('actief');
-      document.getElementById('wrap-soort').style.display = '';
-    }
-    if (soortSlug) {
-      selSoort.value = soortSlug;
-      selSoort.classList.add('actief');
-      document.getElementById('wrap-fase').style.display = '';
-      document.getElementById('extra-filters').style.display = '';
-    }
-    if (faseSlug) {
-      selFase.value = faseSlug;
-      selFase.classList.add('actief');
-      document.getElementById('extra-filters').style.display = '';
-    }
-
-    // Navigatie-events
-    selMerk.addEventListener('change', () => {
-      const v = selMerk.value;
-      if (v) window.location.href = `/${v}/`;
-    });
-    selSoort.addEventListener('change', () => {
-      const v = selSoort.value;
-      if (v) window.location.href = `/${merkSlug}/${v}/`;
-    });
-    selFase.addEventListener('change', () => {
-      const v = selFase.value;
-      if (v) window.location.href = `/${merkSlug}/${soortSlug}/${v}/`;
-    });
-
-    // Extra filter knoppen
-    bindFilter('filter-bijzonder','bijzonder');
-    bindFilter('filter-winkel','winkel');
-    document.getElementById('sortering').addEventListener('change', renderDeals);
+  // ── HELPERS ──
+  function slugify(str) {
+    return (str || '')
+      .toLowerCase()
+      .replace(/[àáâãäå]/g,'a').replace(/[èéêë]/g,'e')
+      .replace(/[ìíîï]/g,'i').replace(/[òóôõöø]/g,'o')
+      .replace(/[ùúûü]/g,'u').replace(/[ýÿ]/g,'y')
+      .replace(/[ñ]/g,'n').replace(/[ç]/g,'c').replace(/[ß]/g,'ss')
+      .replace(/&/g,'en').replace(/[^a-z0-9\s-]/g,'')
+      .replace(/\s+/g,'-').replace(/-+/g,'-')
+      .replace(/^-+|-+$/g,'');
   }
-
-  // ── KILOPRIJS ──
   function detectKg(naam) {
     const m = naam.match(/(\d+[,.]?\d*)\s*kg/i);
     if (m) return parseFloat(m[1].replace(',','.'));
@@ -424,124 +347,194 @@
     if (g) return parseInt(g[1])/1000;
     return null;
   }
-  function kiloprijsLabel(prijs, naam) {
+  function kpLabel(prijs, naam) {
     const kg = detectKg(naam);
     if (!kg||kg<=0) return '';
-    return `€${(parseFloat(prijs)/kg).toFixed(2).replace('.',',' )}/kg`;
+    return `€${(parseFloat(prijs)/kg).toFixed(2).replace('.',',')}/kg`;
   }
-  function kiloprijsWaarde(prijs, naam) {
+  function kpWaarde(prijs, naam) {
     const kg = detectKg(naam);
     if (!kg||kg<=0) return Infinity;
     return parseFloat(prijs)/kg;
   }
-
-  // ── FAVORIETEN ──
-  function toggleFavoriet(id, btn) {
-    if (favorieten.has(id)) { favorieten.delete(id); btn.textContent='♡'; btn.classList.remove('actief'); }
-    else                    { favorieten.add(id);    btn.textContent='♥'; btn.classList.add('actief'); }
-    localStorage.setItem('favorieten', JSON.stringify([...favorieten]));
-    if (actief.bijzonder==='favoriet') renderDeals();
+  function groeperNaarProducten(deals) {
+    const groepen = new Map();
+    for (const d of deals) {
+      const slug = slugify(d.naam);
+      if (!groepen.has(slug)) {
+        groepen.set(slug, {
+          slug, naam: d.naam, merk: d.merk, merkNaam: d.merkNaam,
+          textuur: d.textuur, fase: d.fase, graanvrij: d.graanvrij, biologisch: d.biologisch,
+          afbeelding: d.afbeelding,
+          bestePrijs: parseFloat(d.prijs), besteDeal: d, winkels: []
+        });
+      }
+      const g = groepen.get(slug);
+      const p = parseFloat(d.prijs);
+      if (p < g.bestePrijs) { g.bestePrijs = p; g.besteDeal = d; g.afbeelding = d.afbeelding || g.afbeelding; }
+      g.winkels.push({ winkel: d.winkel, winkelnaam: d.winkelnaam, prijs: p, url: d.url, korting: d.korting });
+    }
+    return [...groepen.values()];
   }
 
-  // ── DEALS LADEN ──
+  // ── URL PARSING ──
+  const path  = window.location.pathname.replace(/^\/|\/$/g,'');
+  const parts = path.split('/').filter(Boolean);
+  const [merkSlug, soortSlug, faseSlug] = parts;
+  const level = parts.length;
+
+  // ── STATE ──
+  let alleProducten = [];
+  let actief = { bijzonder:'alle', winkel:'alle' };
+
+  // ── PAGINA INITIALISEREN ──
+  function initPagina() {
+    const merkNaam  = MERKEN[merkSlug]  || merkSlug || '';
+    const soortNaam = SOORTEN[soortSlug] || '';
+    const faseNaam  = FASEN[faseSlug]   || '';
+
+    let titleParts = [merkNaam];
+    if (soortNaam) titleParts.push(soortNaam.replace(/^\S+\s/,''));
+    if (faseNaam)  titleParts.push(faseNaam.replace(/^\S+\s/,''));
+    document.title = `${titleParts.filter(Boolean).join(' ')} producten vergelijken | HondenvoerDeal.nl`;
+
+    const canon = document.querySelector('link[rel="canonical"]');
+    if (canon) canon.href = 'https://hondenvoerdeal.nl' + window.location.pathname;
+
+    const bc = document.getElementById('breadcrumb-inner');
+    let html = '<a href="/">Alle merken</a>';
+    if (merkSlug) {
+      html += '<span class="breadcrumb-sep">›</span>';
+      if (level > 1) html += `<a href="/${merkSlug}/">${merkNaam}</a>`;
+      else           html += `<span class="breadcrumb-cur">${merkNaam}</span>`;
+    }
+    if (soortSlug) {
+      html += '<span class="breadcrumb-sep">›</span>';
+      if (level > 2) html += `<a href="/${merkSlug}/${soortSlug}/">${soortNaam}</a>`;
+      else           html += `<span class="breadcrumb-cur">${soortNaam}</span>`;
+    }
+    if (faseSlug) html += `<span class="breadcrumb-sep">›</span><span class="breadcrumb-cur">${faseNaam}</span>`;
+    bc.innerHTML = html;
+
+    const selMerk  = document.getElementById('sel-merk');
+    const selSoort = document.getElementById('sel-soort');
+    const selFase  = document.getElementById('sel-fase');
+    if (merkSlug)  { selMerk.value = merkSlug;  selMerk.classList.add('actief');  document.getElementById('wrap-soort').style.display = ''; }
+    if (soortSlug) { selSoort.value = soortSlug; selSoort.classList.add('actief'); document.getElementById('wrap-fase').style.display = ''; document.getElementById('extra-filters').style.display = ''; }
+    if (faseSlug)  { selFase.value  = faseSlug;  selFase.classList.add('actief');  document.getElementById('extra-filters').style.display = ''; }
+
+    selMerk.addEventListener('change',  () => { if (selMerk.value)  window.location.href = `/${selMerk.value}/`; });
+    selSoort.addEventListener('change', () => { if (selSoort.value) window.location.href = `/${merkSlug}/${selSoort.value}/`; });
+    selFase.addEventListener('change',  () => { if (selFase.value)  window.location.href = `/${merkSlug}/${soortSlug}/${selFase.value}/`; });
+
+    bindFilter('filter-bijzonder','bijzonder');
+    bindFilter('filter-winkel','winkel');
+    document.getElementById('sortering').addEventListener('change', renderProducten);
+  }
+
+  // ── LADEN ──
   async function laadDeals() {
     const grid = document.getElementById('grid');
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--grijs)">
       <div style="font-size:40px;margin-bottom:12px">🐾</div>
-      <p style="font-size:16px">Aanbiedingen laden...</p></div>`;
-
+      <p style="font-size:16px">Producten laden...</p></div>`;
     try {
-      // Eén gecachte URL voor alle deals — Netlify CDN cacht 1 uur.
-      // Filtering op merk/soort/fase gebeurt hier client-side, zodat elke
-      // subpagina dezelfde (al gecachte) response hergebruikt.
       const res  = await fetch('/.netlify/functions/deals');
       const data = await res.json();
       let deals  = data.deals || [];
       if (merkSlug)  deals = deals.filter(d => d.merk    === merkSlug);
       if (soortSlug) deals = deals.filter(d => d.textuur === soortSlug);
       if (faseSlug)  deals = deals.filter(d => d.fase    === faseSlug);
-      alleDeals = deals;
-      renderDeals();
+      alleProducten = groeperNaarProducten(deals);
+      renderProducten();
     } catch {
       grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--grijs)">
-        <p>❌ Kon aanbiedingen niet laden. Probeer het later opnieuw.</p></div>`;
+        <p>❌ Kon producten niet laden. Probeer het later opnieuw.</p></div>`;
     }
   }
 
   // ── RENDER ──
-  function renderDeals() {
-    const grid     = document.getElementById('grid');
-    const aantalEl = document.getElementById('aantal');
-    const geenRes  = document.getElementById('geen-resultaten');
-    const sortering = document.getElementById('sortering');
+  function renderProducten() {
+    const grid      = document.getElementById('grid');
+    const aantalEl  = document.getElementById('aantal');
+    const geenRes   = document.getElementById('geen-resultaten');
+    const sortering = document.getElementById('sortering').value;
 
-    let zichtbaar = alleDeals.filter(d => {
-      if (actief.bijzonder==='graanvrij'  && !d.graanvrij)          return false;
-      if (actief.bijzonder==='biologisch' && !d.biologisch)          return false;
-      if (actief.bijzonder==='favoriet'   && !favorieten.has(d.id))  return false;
-      if (actief.winkel!=='alle'          && d.winkel!==actief.winkel) return false;
+    let zichtbaar = alleProducten.filter(p => {
+      if (actief.bijzonder==='graanvrij'  && !p.graanvrij) return false;
+      if (actief.bijzonder==='biologisch' && !p.biologisch) return false;
+      if (actief.winkel!=='alle' && !p.winkels.some(w => w.winkel===actief.winkel)) return false;
       return true;
     });
 
     zichtbaar.sort((a,b) => {
-      if (sortering.value==='korting')    return b.korting - a.korting;
-      if (sortering.value==='prijs-laag') return parseFloat(a.prijs) - parseFloat(b.prijs);
-      if (sortering.value==='prijs-hoog') return parseFloat(b.prijs) - parseFloat(a.prijs);
-      if (sortering.value==='kiloprijs')  return kiloprijsWaarde(a.prijs,a.naam) - kiloprijsWaarde(b.prijs,b.naam);
-      return 0;
+      if (sortering==='prijs-laag') return a.bestePrijs - b.bestePrijs;
+      if (sortering==='kiloprijs')  return kpWaarde(a.bestePrijs,a.naam) - kpWaarde(b.bestePrijs,b.naam);
+      return b.bestePrijs - a.bestePrijs;
     });
 
+    const MAX    = 30;
+    const tonen  = zichtbaar.slice(0, MAX);
     aantalEl.textContent = zichtbaar.length;
-    geenRes.style.display = zichtbaar.length===0 ? '' : 'none';
-    if (zichtbaar.length===0) { grid.innerHTML=''; return; }
+    geenRes.style.display = tonen.length===0 ? '' : 'none';
+    if (tonen.length===0) { grid.innerHTML=''; return; }
 
     const ph = 'https://placehold.co/400x180/e8f5e3/2d5a27?text=';
     const soortEmoji = { droogvoer:'🥣', natvoer:'🥫', snacks:'🦴' };
     const faseLabel  = { puppy:'🐶 Puppy', adult:'🐕 Adult', senior:'🦴 Senior' };
 
-    grid.innerHTML = zichtbaar.map((d, i) => {
-      const logo    = MERKLOGOS[d.merk] || { bg:'var(--groen)', color:'#fff', text:(d.merkNaam||'').toUpperCase() };
-      const fotoSrc = d.afbeelding || `${ph}${encodeURIComponent(d.merkNaam||d.naam)}`;
-      const kpLabel = kiloprijsLabel(d.prijs, d.naam);
-      const isFav   = favorieten.has(d.id);
+    grid.innerHTML = tonen.map((p,i) => {
+      const d    = p.besteDeal;
+      const logo = MERKLOGOS[p.merk] || { bg:'var(--groen)', color:'#fff', text:(p.merkNaam||'').toUpperCase() };
+      const foto = p.afbeelding || `${ph}${encodeURIComponent(p.merkNaam||p.naam)}`;
+      const kp   = kpLabel(p.bestePrijs, p.naam);
+      const n    = p.winkels.length;
 
       return `
-      <div class="deal-card" style="animation-delay:${i*0.04}s" onclick="toonModal('${d.id}')">
+      <div class="deal-card" style="animation-delay:${i*0.04}s"
+           onclick="window.location.href='/${p.merk}/product/${p.slug}/'">
         ${d.korting>0 ? `<span class="korting-badge">-${d.korting}%</span>` : ''}
-        <span class="winkel-badge">${d.winkelnaam}</span>
-        <button class="fav-btn ${isFav?'actief':''}" title="${isFav?'Verwijderen uit favorieten':'Toevoegen aan favorieten'}"
-          onclick="event.stopPropagation();toggleFavoriet('${d.id}',this)">${isFav?'♥':'♡'}</button>
+        <span class="winkel-badge">${n>1 ? `${n} winkels` : d.winkelnaam}</span>
         <div class="card-foto">
-          <img class="card-img" loading="lazy" src="${fotoSrc}" alt="${d.naam}"
-               onerror="this.src='${ph}${encodeURIComponent(d.naam.substring(0,60))}'"/>
+          <img class="card-img" loading="lazy" src="${foto}" alt="${p.naam}"
+               onerror="this.src='${ph}${encodeURIComponent(p.naam.substring(0,60))}'"/>
           <div class="card-merklogo">
             <span class="card-merklogo-text" style="color:${logo.color};background:${logo.bg};padding:3px 7px;border-radius:5px;font-size:9px;font-weight:900;letter-spacing:.5px">${logo.text}</span>
           </div>
         </div>
         <div class="soort-tag">
-          ${soortEmoji[d.textuur]||'🥣'} ${d.textuur?d.textuur.charAt(0).toUpperCase()+d.textuur.slice(1):''}
-          ${d.fase&&d.fase!=='adult'?' · '+faseLabel[d.fase]:''}
-          ${d.graanvrij?' · 🌿':''}${d.biologisch?' · 🌱 Bio':''}
+          ${soortEmoji[p.textuur]||'🥣'} ${p.textuur?p.textuur.charAt(0).toUpperCase()+p.textuur.slice(1):''}
+          ${p.fase&&p.fase!=='adult'?' · '+faseLabel[p.fase]:''}
+          ${p.graanvrij?' · 🌿':''}${p.biologisch?' · 🌱 Bio':''}
         </div>
         <div class="card-body">
-          <p class="card-merk">${d.merkNaam||d.merk}</p>
-          <p class="card-naam">${d.naam}</p>
+          <p class="card-merk">${p.merkNaam||p.merk}</p>
+          <p class="card-naam">${p.naam}</p>
           <div class="prijzen">
-            <span class="prijs-nieuw">€${Number(d.prijs).toFixed(2).replace('.',',')}</span>
+            <span class="prijs-nieuw">€${p.bestePrijs.toFixed(2).replace('.',',')}</span>
             ${d.prijsOud?`<span class="prijs-oud">€${Number(d.prijsOud).toFixed(2).replace('.',',')}</span>`:''}
           </div>
           <div class="prijs-meta">
             ${d.besparing?`<span class="besparing">Bespaar €${Number(d.besparing).toFixed(2).replace('.',',')}</span>`:''}
-            ${kpLabel?`<span class="kiloprijs">${kpLabel}</span>`:''}
+            ${kp?`<span class="kiloprijs">${kp}</span>`:''}
           </div>
-          <a class="deal-btn" href="${d.url}" target="_blank" rel="noopener sponsored" onclick="event.stopPropagation()">Bekijk aanbieding</a>
+          <button class="deal-btn" onclick="event.stopPropagation();window.location.href='/${p.merk}/product/${p.slug}/'">
+            Vergelijk prijzen →
+          </button>
         </div>
         <div class="card-footer">
-          <span class="geldig-tot">Via <span>${d.winkelnaam}</span></span>
+          <span class="geldig-tot">${n===1?`Alleen bij ${d.winkelnaam}`:n+' winkels vergeleken'}</span>
           ${d.gratis_verzending?'<span class="gratis-verzending">✓ Gratis verzending</span>':''}
         </div>
       </div>`;
     }).join('');
+
+    if (zichtbaar.length > MAX) {
+      const hint = document.createElement('p');
+      hint.style.cssText = 'grid-column:1/-1;text-align:center;color:var(--grijs);font-size:13px;padding:12px 0';
+      hint.textContent = `Top ${MAX} van ${zichtbaar.length} producten getoond — filter op soort of levensfase voor een gerichtere selectie.`;
+      grid.appendChild(hint);
+    }
   }
 
   // ── FILTER BUTTONS ──
@@ -553,74 +546,10 @@
         el.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         actief[sleutel] = btn.dataset[sleutel];
-        renderDeals();
+        renderProducten();
       });
     });
   }
-
-  // ── MODAL ──
-  function toonModal(dealId) {
-    const deal = alleDeals.find(d => d.id===dealId);
-    if (!deal) return;
-    const vergelijkbaar = alleDeals
-      .filter(d => d.merk===deal.merk && d.id!==deal.id)
-      .sort((a,b) => parseFloat(a.prijs)-parseFloat(b.prijs))
-      .slice(0,8);
-    const ph = 'https://placehold.co/400x200/e8f5e3/2d5a27?text=';
-    const kpLabel = kiloprijsLabel(deal.prijs, deal.naam);
-    const fotoSrc = deal.afbeelding || `${ph}${encodeURIComponent((deal.merkNaam||deal.naam).substring(0,30))}`;
-    document.getElementById('modal-inhoud').innerHTML = `
-      <div class="modal-hoofd">
-        <img class="modal-img" loading="lazy" src="${fotoSrc}" alt="${deal.naam}"
-             onerror="this.src='${ph}${encodeURIComponent(deal.naam.substring(0,30))}'"/>
-        <div class="modal-info">
-          <p class="modal-merk-tag">${deal.merkNaam||deal.merk}</p>
-          <h2 class="modal-naam">${deal.naam}</h2>
-          <div class="modal-prijsrij">
-            <span class="modal-prijs">€${Number(deal.prijs).toFixed(2).replace('.',',')}</span>
-            ${deal.prijsOud?`<span class="modal-oud">€${Number(deal.prijsOud).toFixed(2).replace('.',',')}</span>`:''}
-            ${deal.korting>0?`<span class="modal-kortbadge">-${deal.korting}%</span>`:''}
-          </div>
-          ${kpLabel?`<p class="modal-kp">${kpLabel}</p>`:''}
-          <p class="modal-winkelrij">Via <strong>${deal.winkelnaam}</strong>${deal.besparing?` · Bespaar €${Number(deal.besparing).toFixed(2).replace('.',',')}`:''}
-          </p>
-          <a class="deal-btn" href="${deal.url}" target="_blank" rel="noopener sponsored">Bekijk bij ${deal.winkelnaam}</a>
-        </div>
-      </div>
-      ${vergelijkbaar.length>0?`
-      <div class="modal-scheiding"></div>
-      <div class="modal-vergelijk">
-        <p class="modal-verg-titel">Meer van ${deal.merkNaam||deal.merk}</p>
-        <div class="modal-verg-lijst">
-          ${vergelijkbaar.map(v=>{
-            const vkp=kiloprijsLabel(v.prijs,v.naam);
-            const vfoto=v.afbeelding||`${ph}${encodeURIComponent((v.merkNaam||v.naam).substring(0,20))}`;
-            return `<a class="modal-verg-item" href="${v.url}" target="_blank" rel="noopener sponsored">
-              <img class="modal-v-img" loading="lazy" src="${vfoto}" alt="${v.naam}"
-                   onerror="this.src='${ph}${encodeURIComponent(v.naam.substring(0,20))}'"/>
-              <div class="modal-v-info">
-                <p class="modal-v-naam">${v.naam}</p>
-                <div class="modal-v-meta">
-                  <strong>€${Number(v.prijs).toFixed(2).replace('.',',')}</strong>
-                  ${v.korting>0?`<span class="modal-v-korting">-${v.korting}%</span>`:''}
-                  ${vkp?`<span>· ${vkp}</span>`:''}
-                </div>
-                <p class="modal-v-winkel">${v.winkelnaam}</p>
-              </div>
-              <span class="modal-v-btn">→</span>
-            </a>`;
-          }).join('')}
-        </div>
-      </div>`:''}`;
-    document.getElementById('modal').classList.add('open');
-    document.body.style.overflow='hidden';
-  }
-
-  function sluitModal() {
-    document.getElementById('modal').classList.remove('open');
-    document.body.style.overflow='';
-  }
-  document.addEventListener('keydown', e => { if(e.key==='Escape') sluitModal(); });
 
   // ── START ──
   initPagina();

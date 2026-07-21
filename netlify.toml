@@ -6,6 +6,11 @@
   node_bundler = "esbuild"
 
 [[redirects]]
+  from = "/:merk/product/:slug"
+  to = "/product.html"
+  status = 200
+
+[[redirects]]
   from = "/:merk/:soort/:fase"
   to = "/subpage.html"
   status = 200
